@@ -583,11 +583,8 @@ namespace Bullseye
 			else if (projectileEntity is EntityThrownBeenade entityThrownBeenade)
 			{
 				entityThrownBeenade.FiredBy = byEntity;
-				// Using reflection to set damage because it's internal
-				// It's not worth bugging Tyron about because Bullseye is gonna get its own projectile class anyway
-				FieldInfo fieldInfo = typeof(EntityThrownBeenade).GetField("Damage", BindingFlags.Instance | BindingFlags.NonPublic);
-				fieldInfo.SetValue(entityThrownBeenade, damage);
-				entityThrownBeenade.ProjectileStack = ammoStack;
+                entityThrownBeenade.Damage = damage;
+                entityThrownBeenade.ProjectileStack = ammoStack;
 			}
 
 			return projectileEntity;

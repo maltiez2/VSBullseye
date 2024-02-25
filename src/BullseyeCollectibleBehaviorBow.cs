@@ -110,11 +110,6 @@ namespace Bullseye
 			if (cancelReason != EnumItemUseCancelReason.ReleasedMouse || secondsUsed < GetChargeNeeded(api, byEntity))
 			{
 				byEntity.AnimManager.StopAnimation("bowaim");
-
-				if (byEntity.Api.Side == EnumAppSide.Client)
-				{
-					collObj.GetBehavior<BullseyeCollectibleBehaviorAnimatableAttach>()?.StopAnimation("draw");
-				}
 			}
         }
 
@@ -147,8 +142,6 @@ namespace Bullseye
 					renderInfo.Transform.ScaleXYZ.X = arrowScale * groundScaleFactor;
 					renderInfo.Transform.ScaleXYZ.Y = arrowScale * groundScaleFactor;
 					renderInfo.Transform.ScaleXYZ.Z = arrowScale * groundScaleFactor;
-
-					collObj.GetBehavior<BullseyeCollectibleBehaviorAnimatableAttach>()?.SetAttachedRenderInfo(renderInfo);
 
 
                     _animatableBehavior?.SetAttachment(byEntity.EntityId, "Arrow", arrowSlot.Itemstack, renderInfo.Transform);
@@ -205,8 +198,6 @@ namespace Bullseye
 			{
 				slot.Itemstack.TempAttributes.RemoveAttribute("renderVariant");
 
-				collObj.GetBehavior<BullseyeCollectibleBehaviorAnimatableAttach>()?.StopAnimation("draw", true);
-				collObj.GetBehavior<BullseyeCollectibleBehaviorAnimatableAttach>()?.SetAttachedRenderInfo(null);
                 _animatableBehavior?.RemoveAttachment(byEntity.EntityId, "Arrow");
             }
 
@@ -264,6 +255,8 @@ namespace Bullseye
 
         protected void SetAimAnimation(ICoreClientAPI capi)
 		{
+            if (_animationsFailed) return;
+
             Vec2f currentAim = CoreClientSystem.GetCurrentAim();
 
             float Y = 45.0f - currentAim.X * _followFactor_X + _followOffset_X;
@@ -271,36 +264,54 @@ namespace Bullseye
             float Ytp = 45.0f - currentAim.X * _followFactor_X * _followTpFactor + _followOffset_X;
             float Ztp = 45.0f + currentAim.Y * _followFactor_Y * _followTpFactor + _followOffset_Y;
 
-            _animationManager?.Run(
-				AnimationTarget.Entity(capi.World.Player.Entity.EntityId, AnimationTargetType.EntityFirstPerson),
-				new AnimationSequence(_horizontalAimingAnimation, RunParameters.EaseIn(0.1f * _followSmoothFactor, Y, ProgressModifierType.Sin)));
-            _animationManager?.Run(
-                AnimationTarget.Entity(capi.World.Player.Entity.EntityId, AnimationTargetType.EntityFirstPerson),
-                new AnimationSequence(_verticalAimingAnimation, RunParameters.EaseIn(0.1f * _followSmoothFactor, Z, ProgressModifierType.Sin)));
-            _animationManager?.Run(
-                AnimationTarget.Entity(capi.World.Player.Entity.EntityId, AnimationTargetType.EntityThirdPerson),
-                new AnimationSequence(_horizontalAimingAnimation, RunParameters.EaseIn(0.1f, Ytp, ProgressModifierType.Sin)));
-            _animationManager?.Run(
-                AnimationTarget.Entity(capi.World.Player.Entity.EntityId, AnimationTargetType.EntityThirdPerson),
-                new AnimationSequence(_verticalAimingAnimation, RunParameters.EaseIn(0.1f, Ztp, ProgressModifierType.Sin)));
+            try
+			{
+                _animationManager?.Run(
+					AnimationTarget.Entity(capi.World.Player.Entity.EntityId, AnimationTargetType.EntityFirstPerson),
+					new AnimationSequence(_horizontalAimingAnimation, RunParameters.EaseIn(0.1f * _followSmoothFactor, Y, ProgressModifierType.Sin)));
+                _animationManager?.Run(
+                    AnimationTarget.Entity(capi.World.Player.Entity.EntityId, AnimationTargetType.EntityFirstPerson),
+                    new AnimationSequence(_verticalAimingAnimation, RunParameters.EaseIn(0.1f * _followSmoothFactor, Z, ProgressModifierType.Sin)));
+                _animationManager?.Run(
+                    AnimationTarget.Entity(capi.World.Player.Entity.EntityId, AnimationTargetType.EntityThirdPerson),
+                    new AnimationSequence(_horizontalAimingAnimation, RunParameters.EaseIn(0.1f, Ytp, ProgressModifierType.Sin)));
+                _animationManager?.Run(
+                    AnimationTarget.Entity(capi.World.Player.Entity.EntityId, AnimationTargetType.EntityThirdPerson),
+                    new AnimationSequence(_verticalAimingAnimation, RunParameters.EaseIn(0.1f, Ztp, ProgressModifierType.Sin)));
+            }
+			catch
+			{
+                _animationsFailed = true;
+            }
         }
 
         protected void ResetAimAnimation(ICoreClientAPI capi)
         {
             PrepareAnimations();
+
             _animatableBehavior?.RunAnimation(_bowDrawAnimation, RunParameters.Set(0));
-            _animationManager?.Run(
+
+            if (_animationsFailed) return;
+
+            try
+			{
+                _animationManager?.Run(
                 AnimationTarget.Entity(capi.World.Player.Entity.EntityId, AnimationTargetType.EntityFirstPerson),
                 new AnimationSequence(_horizontalAimingAnimation, RunParameters.EaseOut(0.5f)));
-            _animationManager?.Run(
-                AnimationTarget.Entity(capi.World.Player.Entity.EntityId, AnimationTargetType.EntityFirstPerson),
-                new AnimationSequence(_verticalAimingAnimation, RunParameters.EaseOut(0.5f)));
-            _animationManager?.Run(
-                AnimationTarget.Entity(capi.World.Player.Entity.EntityId, AnimationTargetType.EntityThirdPerson),
-                new AnimationSequence(_horizontalAimingAnimation, RunParameters.EaseOut(0.5f)));
-            _animationManager?.Run(
-                AnimationTarget.Entity(capi.World.Player.Entity.EntityId, AnimationTargetType.EntityThirdPerson),
-                new AnimationSequence(_verticalAimingAnimation, RunParameters.EaseOut(0.5f)));
+                _animationManager?.Run(
+                    AnimationTarget.Entity(capi.World.Player.Entity.EntityId, AnimationTargetType.EntityFirstPerson),
+                    new AnimationSequence(_verticalAimingAnimation, RunParameters.EaseOut(0.5f)));
+                _animationManager?.Run(
+                    AnimationTarget.Entity(capi.World.Player.Entity.EntityId, AnimationTargetType.EntityThirdPerson),
+                    new AnimationSequence(_horizontalAimingAnimation, RunParameters.EaseOut(0.5f)));
+                _animationManager?.Run(
+                    AnimationTarget.Entity(capi.World.Player.Entity.EntityId, AnimationTargetType.EntityThirdPerson),
+                    new AnimationSequence(_verticalAimingAnimation, RunParameters.EaseOut(0.5f)));
+            }
+			catch
+			{
+				_animationsFailed = true;
+            }
         }
 
 		private void StartDrawAnimation(float timeModifier)
@@ -309,6 +320,7 @@ namespace Bullseye
         }
 
         private bool _animationsReady = false;
+		private bool _animationsFailed = false;
 		private void PrepareAnimations()
 		{
             if (_animationsReady) return;
@@ -324,8 +336,16 @@ namespace Bullseye
             _horizontalAimingAnimation = new AnimationId("horizontal", "horizontal", EnumAnimationBlendMode.AddAverage);
             _verticalAimingAnimation = new AnimationId("vertical", "vertical", EnumAnimationBlendMode.AddAverage);
 
-            _animationManager.Register(_horizontalAimingAnimation, aimingYData);
-            _animationManager.Register(_verticalAimingAnimation, aimingZData);
+			try
+			{
+                _animationManager.Register(_horizontalAimingAnimation, aimingYData);
+                _animationManager.Register(_verticalAimingAnimation, aimingZData);
+            }
+			catch (Exception exception)
+			{
+                _animationsFailed = true;
+            }
+            
 
             _bowDrawAnimation = _animatableBehavior?.RegisterAnimation("draw", "main", false, EnumAnimationBlendMode.Average, 1) ?? 0;
 

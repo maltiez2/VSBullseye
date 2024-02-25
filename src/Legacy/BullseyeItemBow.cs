@@ -27,14 +27,6 @@ namespace Bullseye
 			{
 				slot.Itemstack.TempAttributes.SetInt("renderVariant", 1);
 
-				GetBehavior<BullseyeCollectibleBehaviorAnimatableAttach>()?.StartAnimation(new AnimationMetaData()
-				{
-					Animation = "Draw",
-					Code = "draw",
-					AnimationSpeed = 0.5f / GetChargeNeeded(api, byEntity),
-					EaseOutSpeed = 6,
-					EaseInSpeed = 15
-				});
 			}
 
 			slot.Itemstack.Attributes.SetInt("renderVariant", 1);
@@ -79,11 +71,6 @@ namespace Bullseye
 			if (cancelReason != EnumItemUseCancelReason.ReleasedMouse || secondsUsed < GetChargeNeeded(api, byEntity))
 			{
 				byEntity.AnimManager.StopAnimation("bowaim");
-
-				if (byEntity.Api.Side == EnumAppSide.Client)
-				{
-					GetBehavior<BullseyeCollectibleBehaviorAnimatableAttach>()?.StopAnimation("draw");
-				}
 			}
 		}
 
@@ -182,7 +169,6 @@ namespace Bullseye
 					/*GetBehavior<CollectibleBehaviorAnimatableSimpleWithAttach>()?.SetAttachedRenderInfo(capi.TesselatorManager.GetDefaultItemMeshRef(arrowSlot.Itemstack.Item),
 						capi.Render.GetItemStackRenderInfo(arrowSlot, EnumItemRenderTarget.Ground));*/
 
-					GetBehavior<BullseyeCollectibleBehaviorAnimatableAttach>()?.SetAttachedRenderInfo(renderInfo);
 				}
 			}
 
@@ -243,9 +229,6 @@ namespace Bullseye
 			if (byEntity.World is IClientWorldAccessor)
 			{
 				slot.Itemstack.TempAttributes.RemoveAttribute("renderVariant");
-
-				GetBehavior<BullseyeCollectibleBehaviorAnimatableAttach>()?.StopAnimation("draw", true);
-				GetBehavior<BullseyeCollectibleBehaviorAnimatableAttach>()?.SetAttachedRenderInfo(null);
 			}
 
 			slot.Itemstack.Attributes.SetInt("renderVariant", 0);

@@ -121,8 +121,7 @@ namespace Bullseye
 			capi.Event.AfterActiveSlotChanged += (changeEventArgs) => {
 				if (changeEventArgs.ToSlot > capi.World.Player.InventoryManager?.GetHotbarInventory().Count) return;
 
-				Item stowedItem = capi.World.Player.InventoryManager?.GetHotbarItemstack(changeEventArgs.ToSlot)?.Item;
-				stowedItem?.GetBehavior<BullseyeCollectibleBehaviorAnimatableAttach>()?.SetAttachedRenderInfo(null);
+
 			};
 		}
 
