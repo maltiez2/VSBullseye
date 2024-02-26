@@ -584,7 +584,7 @@ namespace Bullseye
 			{
 				entityThrownBeenade.FiredBy = byEntity;
                 entityThrownBeenade.Damage = damage;
-                entityThrownBeenade.ProjectileStack = ammoStack;
+				entityThrownBeenade.ProjectileStack = ammoStack;
 			}
 
 			return projectileEntity;

@@ -1,0 +1,14 @@
+{
+    "type": "code",
+    "name": "Bullseye",
+    "modid": "bullseye-continued",
+    "version": "2.5.5",
+
+    "description": "A vanilla-friendly rebalance and overhaul of ranged weapons.",
+    "website": "https://mods.vintagestory.at/bullseye",
+    "authors": [ "TeacupAngel", "Maltiez" ],
+
+    "dependencies": {
+        "game": "1.19.3", "survival": "1.19.3", "animationmanagerlib": "0.6.3"
+    }
+}
