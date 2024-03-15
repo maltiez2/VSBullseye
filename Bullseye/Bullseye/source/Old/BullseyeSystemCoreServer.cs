@@ -8,7 +8,7 @@ using Vintagestory.GameContent;
 using Vintagestory.API.MathTools;
 using ProtoBuf;
 
-namespace Bullseye
+namespace Bullseye.Old
 {
 	public class BullseyeSystemCoreServer : ModSystem
 	{

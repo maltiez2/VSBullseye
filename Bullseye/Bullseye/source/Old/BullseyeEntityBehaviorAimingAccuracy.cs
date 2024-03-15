@@ -10,7 +10,7 @@ using Vintagestory.API.Server;
 using Vintagestory.API.Common.Entities;
 using Vintagestory.API.MathTools;
 
-namespace Bullseye
+namespace Bullseye.Old
 {
 	public class BullseyeEntityBehaviorAimingAccuracy : EntityBehavior
 	{

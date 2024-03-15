@@ -13,7 +13,7 @@ using Vintagestory.GameContent;
 
 using Newtonsoft.Json.Linq;
 
-namespace Bullseye
+namespace Bullseye.Old
 {  
 	public class BullseyeCollectibleBehaviorAmmunition : CollectibleBehavior
 	{

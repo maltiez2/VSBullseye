@@ -8,7 +8,7 @@ using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.Config;
 
-namespace Bullseye
+namespace Bullseye.Old
 {
 	public class BullseyeInventoryAmmoSelect : InventoryBase
 	{

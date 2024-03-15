@@ -7,7 +7,7 @@ using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 
-namespace Bullseye
+namespace Bullseye.Old
 {
 	public class BullseyeGuiDialogAmmoSelect : GuiDialog
 	{

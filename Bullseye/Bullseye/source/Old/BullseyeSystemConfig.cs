@@ -18,7 +18,7 @@ using AngelConfig;
 
 using Cairo;
 
-namespace Bullseye
+namespace Bullseye.Old
 {
 	public class BullseyeSystemConfig : AngelSystemConfig
 	{

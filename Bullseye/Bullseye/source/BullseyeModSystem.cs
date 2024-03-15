@@ -1,6 +1,6 @@
 ﻿using Vintagestory.API.Common;
 
-namespace Bullseye;
+namespace Bullseye.Old;
 
 public class BullseyeModSystem : ModSystem
 {

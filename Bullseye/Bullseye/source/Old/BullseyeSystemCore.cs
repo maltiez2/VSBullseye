@@ -9,7 +9,7 @@ using Vintagestory.API.Config;
 
 using HarmonyLib;
 
-namespace Bullseye
+namespace Bullseye.Old
 {
 	public class BullseyeSystemCore : ModSystem
 	{

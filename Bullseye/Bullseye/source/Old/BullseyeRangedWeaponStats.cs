@@ -1,4 +1,4 @@
-namespace Bullseye
+namespace Bullseye.Old
 {
 	public class BullseyeRangedWeaponStats
 	{

@@ -5,7 +5,7 @@ using Vintagestory.API.MathTools;
 using Vintagestory.API.Client;
 using Vintagestory.API.Config;
 
-namespace Bullseye
+namespace Bullseye.Old
 {
 	public class BullseyeReticleRenderer : IRenderer
 	{

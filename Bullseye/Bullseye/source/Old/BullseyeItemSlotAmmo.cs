@@ -8,7 +8,7 @@ using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.GameContent;
 
-namespace Bullseye
+namespace Bullseye.Old
 {
 	public class BullseyeItemSlotAmmo : ItemSlot
 	{

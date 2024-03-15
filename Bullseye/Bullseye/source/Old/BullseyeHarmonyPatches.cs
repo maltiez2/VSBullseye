@@ -17,7 +17,7 @@ using HarmonyLib;
 
 using Cairo;
 
-namespace Bullseye
+namespace Bullseye.Old
 {
 	namespace HarmonyPatches
 	{

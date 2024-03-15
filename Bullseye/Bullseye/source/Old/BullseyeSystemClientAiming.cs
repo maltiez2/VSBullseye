@@ -9,7 +9,7 @@ using ProtoBuf;
 using System.Reflection;
 using Vintagestory.Common;
 
-namespace Bullseye
+namespace Bullseye.Old
 {
 	public class BullseyeSystemClientAiming : ModSystem
 	{

@@ -6,7 +6,7 @@ using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.API.Client;
 
-namespace Bullseye
+namespace Bullseye.Old
 {
 	public static class BullseyeMathHelper
 	{

@@ -13,7 +13,7 @@ using Vintagestory.API.MathTools;
 using Vintagestory.API.Util;
 using Vintagestory.GameContent;
 
-namespace Bullseye
+namespace Bullseye.Old
 {
 	public class BullseyeCollectibleBehaviorBow : BullseyeCollectibleBehaviorRangedWeapon
 	{

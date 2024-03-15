@@ -13,7 +13,7 @@ using Vintagestory.GameContent;
 
 using System.Globalization;
 
-namespace Bullseye
+namespace Bullseye.Old
 {
 	public class BullseyeCollectibleBehaviorRangedWeapon : CollectibleBehavior
 	{

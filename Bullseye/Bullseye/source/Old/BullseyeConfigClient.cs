@@ -4,7 +4,7 @@ using Vintagestory.API.MathTools;
 using Newtonsoft.Json;
 using AngelConfig;
 
-namespace Bullseye
+namespace Bullseye.Old
 {
 	public class BullseyeConfigClient : AngelConfigBase
 	{

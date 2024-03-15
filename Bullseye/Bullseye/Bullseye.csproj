@@ -107,6 +107,10 @@
       <HintPath>$(GameDirectory)\Lib\OpenTK.Windowing.GraphicsLibraryFramework.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Cairo">
+      <HintPath>$(GameDirectory)/Lib/cairo-sharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="protobuf-net">
       <HintPath>$(GameDirectory)/Lib/protobuf-net.dll</HintPath>
       <Private>False</Private>
@@ -142,16 +146,8 @@
     </Reference>
   </ItemGroup>
 
-  <!-- ILRepack nugget package ref; Is used to merge multiple dlls into one to avoid conflicts -->
-  <ItemGroup>
-    <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.26">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-
   <!-- Creates/updates modinfo.json file in build directory -->
-  <Target Name="ModInfo" AfterTargets="CleanReferenceCopyLocalPaths">
+  <Target Name="ModInfo" AfterTargets="Build">
     <PropertyGroup>
       <ModInfo>
 {
