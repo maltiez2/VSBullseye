@@ -30,7 +30,7 @@ internal struct AmmoSyncPacket
 }
 
 
-internal abstract class RangedWeaponSynchronizer
+internal abstract class Synchronizer
 {
     public void StartEntityCooldown(long entityId)
     {
@@ -55,7 +55,7 @@ internal abstract class RangedWeaponSynchronizer
         treeAttribute.SetItemstack(ammoCategory, ammoItemStack);
     }
 
-    protected RangedWeaponSynchronizer(ICoreAPI api)
+    protected Synchronizer(ICoreAPI api)
     {
         World = api.World;
     }
@@ -69,9 +69,9 @@ internal abstract class RangedWeaponSynchronizer
     protected Dictionary<long, long> RangedChargeStartByEntityId = new();
 }
 
-internal sealed class RangedWeaponSynchronizerServer : RangedWeaponSynchronizer
+internal sealed class SynchronizerServer : Synchronizer
 {
-    public RangedWeaponSynchronizerServer(ICoreServerAPI api) : base(api)
+    public SynchronizerServer(ICoreServerAPI api) : base(api)
     {
         _serverApi = api;
         _serverNetworkChannel = api.Network.RegisterChannel("bullseyeitem")
@@ -92,6 +92,7 @@ internal sealed class RangedWeaponSynchronizerServer : RangedWeaponSynchronizer
     {
         return _lastRangedSlotByEntityId.TryGetValue(entityId, out ItemSlot? itemSlot) ? itemSlot : null;
     }
+
 
     private readonly ICoreServerAPI _serverApi;
     private readonly IServerNetworkChannel _serverNetworkChannel;
@@ -129,9 +130,9 @@ internal sealed class RangedWeaponSynchronizerServer : RangedWeaponSynchronizer
     }
 }
 
-internal sealed class RangedWeaponSynchronizerClient : RangedWeaponSynchronizer
+internal sealed class SynchronizerClient : Synchronizer
 {
-    public RangedWeaponSynchronizerClient(ICoreClientAPI api) : base(api)
+    public SynchronizerClient(ICoreClientAPI api) : base(api)
     {
         _clientApi = api;
 
@@ -159,7 +160,6 @@ internal sealed class RangedWeaponSynchronizerClient : RangedWeaponSynchronizer
             AimZ = targetVec.Z
         });
     }
-
     public void SendRangedWeaponAmmoSelectPacket(string ammoCategory, ItemStack ammoItemStack)
     {
         byte[] itemStackData;
@@ -178,6 +178,7 @@ internal sealed class RangedWeaponSynchronizerClient : RangedWeaponSynchronizer
         });
     }
 
+    
     private readonly ICoreClientAPI _clientApi;
     private readonly IClientNetworkChannel _clientNetworkChannel;
 

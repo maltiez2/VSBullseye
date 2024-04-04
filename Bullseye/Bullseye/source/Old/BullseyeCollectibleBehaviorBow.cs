@@ -59,7 +59,7 @@ namespace Bullseye.Old
 				});*/
             }
 
-            StartDrawAnimation(GetChargeNeeded(api, byEntity));
+            StartDrawAnimation(GetChargeNeeded(api, byEntity), byEntity);
 
             slot.Itemstack.Attributes.SetInt("renderVariant", 1);
 
@@ -101,7 +101,7 @@ namespace Bullseye.Old
 			{
 				slot.Itemstack?.TempAttributes.RemoveAttribute("renderVariant");
 
-				ResetAimAnimation(api as ICoreClientAPI);
+				ResetAimAnimation(api as ICoreClientAPI, byEntity);
             }
 
 			slot.Itemstack?.Attributes.SetInt("renderVariant", 0);
@@ -243,13 +243,13 @@ namespace Bullseye.Old
             _followOffset_X = _properties["offsetHorizontal"].AsFloat(_followOffset_X);
             _followOffset_Y = _properties["offsetVertical"].AsFloat(_followOffset_Y);
 #if DEBUG
-			VSImGui.DebugWindow.FloatSlider("bullseye", $"aiming ({collObj.Code})", $"_followFactor_X##{collObj.Code}", 0, 0.2f, () => _followFactor_X, value => _followFactor_X = value);
-            VSImGui.DebugWindow.FloatSlider("bullseye", $"aiming ({collObj.Code})", $"_followFactor_Y##{collObj.Code}", 0, 0.2f, () => _followFactor_Y, value => _followFactor_Y = value);
-            VSImGui.DebugWindow.FloatSlider("bullseye", $"aiming ({collObj.Code})", $"_followOffset_X##{collObj.Code}", -25, 25, () => _followOffset_X, value => _followOffset_X = value);
-            VSImGui.DebugWindow.FloatSlider("bullseye", $"aiming ({collObj.Code})", $"_followOffset_Y##{collObj.Code}", -25, 25, () => _followOffset_Y, value => _followOffset_Y = value);
-            VSImGui.DebugWindow.FloatSlider("bullseye", $"aiming ({collObj.Code})", $"_followTpFactor##{collObj.Code}", 0, 1.0f, () => _followTpFactor, value => _followTpFactor = value);
-            VSImGui.DebugWindow.FloatSlider("bullseye", $"aiming ({collObj.Code})", $"_followSmoothFactor##{collObj.Code}", 0, 2.0f, () => _followSmoothFactor, value => _followSmoothFactor = value);
-            VSImGui.DebugWindow.FloatDrag("bullseye", $"aiming ({collObj.Code})", $"_timeModifier##{collObj.Code}",() => _timeModifier, value => _timeModifier = value);
+			VSImGui.Debug.DebugWidgets.FloatSlider("bullseye", $"aiming ({collObj.Code})", $"_followFactor_X##{collObj.Code}", 0, 0.2f, () => _followFactor_X, value => _followFactor_X = value);
+            VSImGui.Debug.DebugWidgets.FloatSlider("bullseye", $"aiming ({collObj.Code})", $"_followFactor_Y##{collObj.Code}", 0, 0.2f, () => _followFactor_Y, value => _followFactor_Y = value);
+            VSImGui.Debug.DebugWidgets.FloatSlider("bullseye", $"aiming ({collObj.Code})", $"_followOffset_X##{collObj.Code}", -25, 25, () => _followOffset_X, value => _followOffset_X = value);
+            VSImGui.Debug.DebugWidgets.FloatSlider("bullseye", $"aiming ({collObj.Code})", $"_followOffset_Y##{collObj.Code}", -25, 25, () => _followOffset_Y, value => _followOffset_Y = value);
+            VSImGui.Debug.DebugWidgets.FloatSlider("bullseye", $"aiming ({collObj.Code})", $"_followTpFactor##{collObj.Code}", 0, 1.0f, () => _followTpFactor, value => _followTpFactor = value);
+            VSImGui.Debug.DebugWidgets.FloatSlider("bullseye", $"aiming ({collObj.Code})", $"_followSmoothFactor##{collObj.Code}", 0, 2.0f, () => _followSmoothFactor, value => _followSmoothFactor = value);
+            VSImGui.Debug.DebugWidgets.FloatDrag("bullseye", $"aiming ({collObj.Code})", $"_timeModifier##{collObj.Code}",() => _timeModifier, value => _timeModifier = value);
 #endif
         }
 
@@ -285,11 +285,11 @@ namespace Bullseye.Old
             }
         }
 
-        protected void ResetAimAnimation(ICoreClientAPI capi)
+        protected void ResetAimAnimation(ICoreClientAPI capi, Entity player)
         {
             PrepareAnimations();
 
-            _animatableBehavior?.RunAnimation(_bowDrawAnimation, RunParameters.Set(0));
+            _animatableBehavior?.RunAnimation(_bowDrawAnimation, player, RunParameters.Set(0));
 
             if (_animationsFailed) return;
 
@@ -314,9 +314,9 @@ namespace Bullseye.Old
             }
         }
 
-		private void StartDrawAnimation(float timeModifier)
+		private void StartDrawAnimation(float timeModifier, Entity player)
 		{
-            _animatableBehavior?.RunAnimation(_bowDrawAnimation, RunParameters.Play(1.0f * timeModifier * _timeModifier, 0, 14));
+            _animatableBehavior?.RunAnimation(_bowDrawAnimation, player, RunParameters.Play(1.0f * timeModifier * _timeModifier, 0, 14));
         }
 
         private bool _animationsReady = false;
