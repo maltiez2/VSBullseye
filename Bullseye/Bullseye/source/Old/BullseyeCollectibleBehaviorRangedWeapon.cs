@@ -6,9 +6,8 @@ using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Util;
 using Vintagestory.GameContent;
-using Bullseye.Old;
 
-namespace Bullseye.New.RangedWeapon;
+namespace Bullseye.Old;
 
 public class BullseyeCollectibleBehaviorRangedWeapon : CollectibleBehavior
 {
@@ -475,7 +474,7 @@ public class BullseyeCollectibleBehaviorRangedWeapon : CollectibleBehavior
         Vec3d zeroedTargetVec = new(matrixVec[0], matrixVec[1], matrixVec[2]);
 
         // Random spread - uses an older, less elegant method, but I'm not touching this anymore :p
-        Vec3d perp = BullseyeMathHelper.Vec3GetPerpendicular(zeroedTargetVec);
+        Vec3d perp = Vec3GetPerpendicular(zeroedTargetVec);
         Vec3d perp2 = zeroedTargetVec.Cross(perp);
 
         double angle = spreadAngle * (GameMath.PI * 2f);
@@ -497,6 +496,25 @@ public class BullseyeCollectibleBehaviorRangedWeapon : CollectibleBehavior
         }
 
         return velocity;
+    }
+
+    public static Vec3d Vec3GetPerpendicular(Vec3d original)
+    {
+        int vecHighest = Math.Abs(original.X) > Math.Abs(original.Y) ? 0 : 1;
+        vecHighest = Math.Abs(original[vecHighest]) > Math.Abs(original.Z) ? vecHighest : 2;
+
+        int vecLowest = Math.Abs(original.X) < Math.Abs(original.Y) ? 0 : 1;
+        vecLowest = Math.Abs(original[vecLowest]) < Math.Abs(original.Z) ? vecLowest : 2;
+
+        int vecMiddle = Math.Abs(original.X) < Math.Abs(original[vecHighest]) ? 0 : -1;
+        vecMiddle = vecMiddle < 0
+                    || (Math.Abs(original.Y) > Math.Abs(original[vecMiddle]) && Math.Abs(original.Y) < Math.Abs(original[vecHighest])) ? 1 : vecMiddle;
+        vecMiddle = (Math.Abs(original.Z) > Math.Abs(original[vecMiddle]) && Math.Abs(original.Z) < Math.Abs(original[vecHighest])) ? 2 : vecMiddle;
+
+        Vec3d perp = new Vec3d();
+        perp[vecHighest] = original[vecMiddle];
+        perp[vecMiddle] = -original[vecHighest];
+        return perp.Normalize();
     }
 
     protected virtual Entity CreateProjectileEntity(EntityAgent byEntity, EntityProperties type, ItemStack ammoStack, float damage, float dropChance, float weight, int ammoDurabilityCost)
