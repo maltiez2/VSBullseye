@@ -13,7 +13,7 @@ public enum WeaponAimingState
     FullCharge
 }
 
-public sealed class BullseyeReticleRenderer : IRenderer
+public sealed class ReticleRenderer : IRenderer
 {
     public bool ShowReticle { get; set; }
     public WeaponAimingState AimingState { get; set; } = WeaponAimingState.None;
@@ -25,7 +25,7 @@ public sealed class BullseyeReticleRenderer : IRenderer
     public int RenderRange => 9999;
 
 
-    public BullseyeReticleRenderer(ICoreClientAPI api, System.Func<Vec2f> aimingPointGetter)
+    public ReticleRenderer(ICoreClientAPI api, System.Func<Vec2f> aimingPointGetter)
     {
         _clientApi = api;
         _aimingPoint = aimingPointGetter;
@@ -36,10 +36,10 @@ public sealed class BullseyeReticleRenderer : IRenderer
 
         _aimTextureThrowCircle = new LoadedTexture(api);
 
-        api.Render.GetOrLoadTexture(new AssetLocation("bullseye", "gui/aimdefaultpart.png"), ref blockedReticle);
-        api.Render.GetOrLoadTexture(new AssetLocation("bullseye", "gui/aimdefaultfull.png"), ref partChargeReticle);
-        api.Render.GetOrLoadTexture(new AssetLocation("bullseye", "gui/aimblockeddefault.png"), ref fullChargeReticle);
-        api.Render.GetOrLoadTexture(new AssetLocation("bullseye", "gui/throw_circle.png"), ref _aimTextureThrowCircle);
+        api.Render.GetOrLoadTexture(new AssetLocation("bullseye-continued", "gui/aimdefaultpart.png"), ref blockedReticle);
+        api.Render.GetOrLoadTexture(new AssetLocation("bullseye-continued", "gui/aimdefaultfull.png"), ref partChargeReticle);
+        api.Render.GetOrLoadTexture(new AssetLocation("bullseye-continued", "gui/aimblockeddefault.png"), ref fullChargeReticle);
+        api.Render.GetOrLoadTexture(new AssetLocation("bullseye-continued", "gui/throw_circle.png"), ref _aimTextureThrowCircle);
 
         _defaultTextures[WeaponAimingState.Blocked] = blockedReticle;
         _defaultTextures[WeaponAimingState.PartCharge] = partChargeReticle;
