@@ -5,7 +5,7 @@ using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 
-namespace Bullseye.New.RangedWeapon;
+namespace Bullseye.RangedWeapon;
 
 [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
 internal struct FirePacket

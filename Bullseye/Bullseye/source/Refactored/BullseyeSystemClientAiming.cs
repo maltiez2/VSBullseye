@@ -6,81 +6,39 @@ using Bullseye.Old;
 
 namespace Bullseye.New.Aiming;
 
-public class BullseyeSystemClientAiming : ModSystem
+internal sealed class ClientAiming : IDisposable
 {
-    private BullseyeSystemConfig configSystem;
-
     public bool Aiming { get; set; } = false;
     public bool ShowReticle { get; private set; } = true;
-
-    private Random random;
-    private ICoreClientAPI capi;
-
-    private BullseyeReticleRenderer reticleRenderer;
-
-    public override bool ShouldLoad(EnumAppSide forSide)
-    {
-        return forSide == EnumAppSide.Client;
-    }
-
-    public override void StartClientSide(ICoreClientAPI capi)
-    {
-        this.capi = capi;
-
-        configSystem = capi.ModLoader.GetModSystem<BullseyeSystemConfig>();
-
-        StartAimSystem(capi);
-
-        random = new Random();
-
-        reticleRenderer = new BullseyeReticleRenderer(capi);
-        capi.Event.RegisterRenderer(reticleRenderer, EnumRenderStage.Ortho);
-    }
-
-    public void SetRangedWeaponStats(BullseyeRangedWeaponStats weaponStats)
-    {
-        this.WeaponStats = weaponStats;
-    }
-
-    // Aiming system
+    public Vec3d TargetVec { get; private set; } = new Vec3d();
     public Vec2f aim { get; private set; } = new Vec2f();
     public Vec2f aimOffset { get; private set; } = new Vec2f();
-
-    public BullseyeRangedWeaponStats WeaponStats { get; private set; } = new BullseyeRangedWeaponStats();
-
+    public BullseyeRangedWeaponStats WeaponStats { get; set; } = new BullseyeRangedWeaponStats();
     public float DriftMultiplier { get; set; } = 1f;
     public float TwitchMultiplier { get; set; } = 1f;
+    public BullseyeEnumWeaponReadiness WeaponReadiness { get; set; } = BullseyeEnumWeaponReadiness.Blocked;
 
-    private NormalizedSimplexNoise noisegen = NormalizedSimplexNoise.FromDefaultOctaves(4, 1.0, 0.9, 123L);
 
-    private long twitchLastChangeMilliseconds;
-    private long twitchLastStepMilliseconds;
-
-    private Vec2f twitch = new();
-
-    public Vec3d TargetVec { get; private set; } = new Vec3d();
-
-    private Unproject unproject;
-    private double[] viewport = new double[4];
-    private double[] rayStart = new double[4];
-    private double[] rayEnd = new double[4];
-
-    public void StartAimSystem(ICoreClientAPI capi)
+    public ClientAiming(ICoreClientAPI api)
     {
+        _clientApi = api;
+
+        _configSystem = api.ModLoader.GetModSystem<ConfigSystem>();
+
         unproject = new Unproject();
-
         ResetAim();
+
+        reticleRenderer = new BullseyeReticleRenderer(api, GetCurrentAim);
+        api.Event.RegisterRenderer(reticleRenderer, EnumRenderStage.Ortho);
+
+        
     }
-
-    private float aimingDt;
-    private long lastAimingEndTime = 0;
-
-    const long aimResetTime = 15000;
-
-    public void StartAiming()
+    public void StartAiming(WeaponsType weaponType)
     {
+        _currentWeaponType = weaponType;
+        
         // If 15 seconds passed since we last made a shot, reset aim to centre of the screen
-        if (capi.World.ElapsedMilliseconds - lastAimingEndTime > aimResetTime)
+        if (_clientApi.World.ElapsedMilliseconds - lastAimingEndTime > aimResetTime)
         {
             ResetAim();
         }
@@ -89,33 +47,27 @@ public class BullseyeSystemClientAiming : ModSystem
             ResetAimOffset();
         }
 
-        if (configSystem.GetClientConfig().AimStyle == BullseyeEnumAimControlStyle.Fixed)
+        if (_configSystem.ClientSettings.BowAimingType == AimingType.Camera)
         {
-            SetFixedAimPoint(capi.Render.FrameWidth, capi.Render.FrameHeight);
+            SetFixedAimPoint(_clientApi.Render.FrameWidth, _clientApi.Render.FrameHeight);
         }
 
         Aiming = true;
         aimingDt = 0f;
     }
-
     public void StopAiming()
     {
         Aiming = false;
 
-        lastAimingEndTime = capi.World.ElapsedMilliseconds;
+        lastAimingEndTime = _clientApi.World.ElapsedMilliseconds;
     }
-
-    const float aimStartInterpolationTime = 0.3f;
-
-    // Once .NET 7 arrives, currentAim should be deleted and GetCurrentAim() should return a ReadOnlySpan instead
-    private Vec2f currentAim = new();
     public Vec2f GetCurrentAim()
     {
-        float offsetMagnitude = configSystem.GetSyncedConfig().AimDifficulty;
+        float offsetMagnitude = _configSystem.ServerSettings.AimDifficulty;
 
-        if (capi.World.Player?.Entity != null)
+        if (_clientApi.World.Player?.Entity != null)
         {
-            offsetMagnitude /= GameMath.Max(capi.World.Player.Entity.Stats.GetBlended("rangedWeaponsAcc"), 0.001f);
+            offsetMagnitude /= GameMath.Max(_clientApi.World.Player.Entity.Stats.GetBlended("rangedWeaponsAcc"), 0.001f);
         }
 
         float interpolation = GameMath.Sqrt(GameMath.Min(aimingDt / aimStartInterpolationTime, 1f));
@@ -125,9 +77,6 @@ public class BullseyeSystemClientAiming : ModSystem
 
         return currentAim;
     }
-
-    private float currentFovRatio;
-
     // TODO: For a rewrite, consider switching aimX and aimY from pixels to % of screen width/height. That way it's consistent on all resolutions
     // (still will have to account for FoV though).
     public void UpdateAimPoint(ClientMain __instance,
@@ -138,7 +87,7 @@ public class BullseyeSystemClientAiming : ModSystem
         if (Aiming)
         {
             // Default FOV is 70, and 1920 is the screen width of my dev machine :) 
-            currentFovRatio = (__instance.Width / 1920f) * (GameMath.Tan((70f / 2 * GameMath.DEG2RAD)) / GameMath.Tan((ClientSideSettings.FieldOfView / 2 * GameMath.DEG2RAD)));
+            currentFovRatio = (__instance.Width / 1920f) * (GameMath.Tan((70f / 2 * GameMath.DEG2RAD)) / GameMath.Tan((_configSystem.ClientSettings.FieldOfView / 2 * GameMath.DEG2RAD)));
             aimingDt += dt;
 
             // Update
@@ -148,7 +97,7 @@ public class BullseyeSystemClientAiming : ModSystem
                 default: UpdateAimOffsetSimple(__instance, dt); break;
             }
 
-            if (configSystem.GetClientConfig().AimStyle == BullseyeEnumAimControlStyle.Free)
+            if (_configSystem.ClientSettings.BowAimingType == AimingType.Cursor)
             {
                 UpdateMouseDelta(__instance, ref ___MouseDeltaX, ref ___MouseDeltaY, ref ___DelayedMouseDeltaX, ref ___DelayedMouseDeltaY);
             }
@@ -156,13 +105,11 @@ public class BullseyeSystemClientAiming : ModSystem
             SetAim();
         }
     }
-
     public void UpdateAimOffsetSimple(ClientMain __instance, float dt)
     {
         UpdateAimOffsetSimpleDrift(__instance, dt);
         UpdateAimOffsetSimpleTwitch(__instance, dt);
     }
-
     public void UpdateAimOffsetSimpleDrift(ClientMain __instance, float dt)
     {
         const float driftMaxRatio = 1.1f;
@@ -175,7 +122,6 @@ public class BullseyeSystemClientAiming : ModSystem
         aimOffset.X += ((xNoise - aimOffset.X / maxDrift) * WeaponStats.aimDrift * DriftMultiplier * dt * currentFovRatio);
         aimOffset.Y += ((yNoise - aimOffset.Y / maxDrift) * WeaponStats.aimDrift * DriftMultiplier * dt * currentFovRatio);
     }
-
     public void UpdateAimOffsetSimpleTwitch(ClientMain __instance, float dt)
     {
         // Don't ask me why aimOffset needs to be multiplied by fovRatio here, but not in the Drift function
@@ -192,8 +138,8 @@ public class BullseyeSystemClientAiming : ModSystem
 
             float twitchMax = GameMath.Max(WeaponStats.aimTwitch * twitchMaxRatio * TwitchMultiplier, 1f) * currentFovRatio;
 
-            twitch.X = (((float)random.NextDouble() - 0.5f) * 2f) * twitchMax - fovModAimOffsetX / twitchMax;
-            twitch.Y = (((float)random.NextDouble() - 0.5f) * 2f) * twitchMax - fovModAimOffsetY / twitchMax;
+            twitch.X = (((float)_random.NextDouble() - 0.5f) * 2f) * twitchMax - fovModAimOffsetX / twitchMax;
+            twitch.Y = (((float)_random.NextDouble() - 0.5f) * 2f) * twitchMax - fovModAimOffsetY / twitchMax;
 
             float twitchLength = GameMath.Max(GameMath.Sqrt(twitch.X * twitch.X + twitch.Y * twitch.Y), 1f);
 
@@ -211,18 +157,9 @@ public class BullseyeSystemClientAiming : ModSystem
 
         twitchLastStepMilliseconds = __instance.Api.World.ElapsedMilliseconds;
     }
-
-    private float slingHorizRandomOffset;
-
-    /*const float slingCycleLength = 0.75f;
-		const float slingCycleStartDeadzone = 0.2f;*/
-    const float slingCycleLength = 0.9f;
-    const float slingCycleStartDeadzone = 0.1f;
-    const float slingCycleEndCoyoteTime = 0.1f; // Human visual reaction time is 250ms on average, a little 'coyote time' makes shooting more satisfying
-
     public void UpdateAimOffsetSling(ClientMain __instance, float dt)
     {
-        float fovRatio = (__instance.Width / 1920f) * (GameMath.Tan((70f / 2 * GameMath.DEG2RAD)) / GameMath.Tan((ClientSideSettings.FieldOfView / 2 * GameMath.DEG2RAD)));
+        float fovRatio = (__instance.Width / 1920f) * (GameMath.Tan((70f / 2 * GameMath.DEG2RAD)) / GameMath.Tan((_configSystem.ClientSettings.FieldOfView / 2 * GameMath.DEG2RAD)));
 
         float slingRiseArea = 350 * fovRatio;
         float slingHorizArea = 35 * fovRatio;
@@ -233,7 +170,7 @@ public class BullseyeSystemClientAiming : ModSystem
 
         if (slingDt <= dt)
         {
-            slingHorizRandomOffset = slingHorizTwitch * (((float)random.NextDouble() - 0.5f) * 2f);
+            slingHorizRandomOffset = slingHorizTwitch * (((float)_random.NextDouble() - 0.5f) * 2f);
         }
 
         ShowReticle = slingDt > slingCycleStartDeadzone && slingDt < slingCycleLength - slingCycleEndCoyoteTime;
@@ -246,7 +183,6 @@ public class BullseyeSystemClientAiming : ModSystem
         aimOffset.X = slingHorizRandomOffset - slingHorizArea * slingCurrentPoint;
         aimOffset.Y = (slingRiseArea / 2f) - (slingRiseArea * slingCurrentPoint);
     }
-
     public void UpdateMouseDelta(ClientMain __instance,
             ref double ___MouseDeltaX, ref double ___MouseDeltaY,
             ref double ___DelayedMouseDeltaX, ref double ___DelayedMouseDeltaY)
@@ -255,7 +191,7 @@ public class BullseyeSystemClientAiming : ModSystem
         float verticalAimLimit = (__instance.Height / 2f) * WeaponStats.verticalLimit;
         float verticalAimOffset = (__instance.Height / 2f) * WeaponStats.verticalOffset;
 
-        float yInversionFactor = ClientSideSettings.InvertMouseYAxis ? -1 : 1;
+        float yInversionFactor = _configSystem.ClientSettings.InvertMouseYAxis ? -1 : 1;
 
         float deltaX = (float)(___MouseDeltaX - ___DelayedMouseDeltaX);
         float deltaY = (float)(___MouseDeltaY - ___DelayedMouseDeltaY) * yInversionFactor;
@@ -280,10 +216,9 @@ public class BullseyeSystemClientAiming : ModSystem
             ___DelayedMouseDeltaY = ___MouseDeltaY;
         }
     }
-
     public void SetFixedAimPoint(int screenWidth, int screenHeight)
     {
-        float difficultyModifier = GameMath.Clamp(configSystem.GetSyncedConfig().AimDifficulty, 0, 1);
+        float difficultyModifier = GameMath.Clamp(_configSystem.ServerSettings.AimDifficulty, 0, 1);
 
         float horizontalLimit = GameMath.Min(WeaponStats.horizontalLimit, 0.25f);
         float verticalLimit = GameMath.Min(WeaponStats.verticalLimit, 0.25f);
@@ -302,24 +237,23 @@ public class BullseyeSystemClientAiming : ModSystem
         float horizontalCenter = GameMath.Clamp(aim.X, -maxHorizontalShift, maxHorizontalShift);
         float verticalCenter = GameMath.Clamp(aim.Y, -maxVerticalShift, maxVerticalShift);
 
-        aim.X = (horizontalCenter + (-maxHorizontalShift + ((float)random.NextDouble() * maxHorizontalShift * 2f))) * difficultyModifier;
-        aim.Y = (verticalCenter + (-maxVerticalShift + ((float)random.NextDouble() * maxVerticalShift * 2f)) + verticalAimOffset) * difficultyModifier;
+        aim.X = (horizontalCenter + (-maxHorizontalShift + ((float)_random.NextDouble() * maxHorizontalShift * 2f))) * difficultyModifier;
+        aim.Y = (verticalCenter + (-maxVerticalShift + ((float)_random.NextDouble() * maxVerticalShift * 2f)) + verticalAimOffset) * difficultyModifier;
     }
-
     public void SetAim()
     {
         Vec2f currentAim = GetCurrentAim();
 
-        int mouseCurrentX = (int)currentAim.X + capi.Render.FrameWidth / 2;
-        int mouseCurrentY = (int)currentAim.Y + capi.Render.FrameHeight / 2;
+        int mouseCurrentX = (int)currentAim.X + _clientApi.Render.FrameWidth / 2;
+        int mouseCurrentY = (int)currentAim.Y + _clientApi.Render.FrameHeight / 2;
         viewport[0] = 0.0;
         viewport[1] = 0.0;
-        viewport[2] = capi.Render.FrameWidth;
-        viewport[3] = capi.Render.FrameHeight;
+        viewport[2] = _clientApi.Render.FrameWidth;
+        viewport[3] = _clientApi.Render.FrameHeight;
 
         bool unprojectPassed = true;
-        unprojectPassed |= unproject.UnProject(mouseCurrentX, capi.Render.FrameHeight - mouseCurrentY, 1, capi.Render.MvMatrix.Top, capi.Render.PMatrix.Top, viewport, rayEnd);
-        unprojectPassed |= unproject.UnProject(mouseCurrentX, capi.Render.FrameHeight - mouseCurrentY, 0, capi.Render.MvMatrix.Top, capi.Render.PMatrix.Top, viewport, rayStart);
+        unprojectPassed |= unproject.UnProject(mouseCurrentX, _clientApi.Render.FrameHeight - mouseCurrentY, 1, _clientApi.Render.MvMatrix.Top, _clientApi.Render.PMatrix.Top, viewport, rayEnd);
+        unprojectPassed |= unproject.UnProject(mouseCurrentX, _clientApi.Render.FrameHeight - mouseCurrentY, 0, _clientApi.Render.MvMatrix.Top, _clientApi.Render.PMatrix.Top, viewport, rayStart);
 
         // If unproject fails, well, not much we can do really. Try not to crash
         if (!unprojectPassed) return;
@@ -340,6 +274,61 @@ public class BullseyeSystemClientAiming : ModSystem
         TargetVec.Y = offsetY;
         TargetVec.Z = offsetZ;
     }
+    public void SetWeaponReadinessState(BullseyeEnumWeaponReadiness state)
+    {
+        WeaponReadiness = state;
+    }
+
+    public void SetReticleTextures(LoadedTexture partChargeTex, LoadedTexture fullChargeTex, LoadedTexture blockedTex)
+    {
+        reticleRenderer.SetReticleTextures(partChargeTex, fullChargeTex, blockedTex);
+    }
+    public void Dispose()
+    {
+        // Can be null when loading a world aborts partway through
+        if (reticleRenderer != null)
+        {
+            _clientApi.Event.UnregisterRenderer(reticleRenderer, EnumRenderStage.Ortho);
+            reticleRenderer = null;
+        }
+
+        _clientApi = null;
+
+        _configSystem = null;
+
+        _random = null;
+
+        WeaponStats = null;
+        noisegen = null;
+        unproject = null;
+    }
+
+
+
+    private NormalizedSimplexNoise noisegen = NormalizedSimplexNoise.FromDefaultOctaves(4, 1.0, 0.9, 123L);
+    private ConfigSystem _configSystem;
+    private Random _random = new();
+    private ICoreClientAPI? _clientApi;
+    private BullseyeReticleRenderer reticleRenderer;
+    private long twitchLastChangeMilliseconds;
+    private long twitchLastStepMilliseconds;
+    private Vec2f twitch = new();
+    private Unproject unproject;
+    private double[] viewport = new double[4];
+    private double[] rayStart = new double[4];
+    private double[] rayEnd = new double[4];
+    private float aimingDt;
+    private long lastAimingEndTime = 0;
+    private const long aimResetTime = 15000;
+    private const float aimStartInterpolationTime = 0.3f;
+    private Vec2f currentAim = new();
+    private float currentFovRatio;
+    private float slingHorizRandomOffset;
+    const float slingCycleLength = 0.9f;
+    const float slingCycleStartDeadzone = 0.1f;
+    const float slingCycleEndCoyoteTime = 0.1f; // Human visual reaction time is 250ms on average, a little 'coyote time' makes shooting more satisfying
+
+    private WeaponsType _currentWeaponType = WeaponsType.Bow;
 
     private void ResetAimOffset()
     {
@@ -351,45 +340,11 @@ public class BullseyeSystemClientAiming : ModSystem
 
         ShowReticle = true;
     }
-
     private void ResetAim()
     {
         aim.X = 0f;
         aim.Y = 0f;
 
         ResetAimOffset();
-    }
-
-    public BullseyeEnumWeaponReadiness WeaponReadiness { get; set; } = BullseyeEnumWeaponReadiness.Blocked;
-
-    public void SetWeaponReadinessState(BullseyeEnumWeaponReadiness state)
-    {
-        WeaponReadiness = state;
-    }
-
-    public void SetReticleTextures(LoadedTexture partChargeTex, LoadedTexture fullChargeTex, LoadedTexture blockedTex)
-    {
-        reticleRenderer.SetReticleTextures(partChargeTex, fullChargeTex, blockedTex);
-    }
-
-    // ---
-    public override void Dispose()
-    {
-        // Can be null when loading a world aborts partway through
-        if (reticleRenderer != null)
-        {
-            capi.Event.UnregisterRenderer(reticleRenderer, EnumRenderStage.Ortho);
-            reticleRenderer = null;
-        }
-
-        capi = null;
-
-        configSystem = null;
-
-        random = null;
-
-        WeaponStats = null;
-        noisegen = null;
-        unproject = null;
     }
 }

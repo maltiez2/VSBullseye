@@ -53,16 +53,6 @@ namespace Bullseye.Old
 		{
 			api.RegisterItemClass("Bullseye.ItemMeleeSpear", typeof(BullseyeItemMeleeSpear));
 			api.RegisterItemClass("Bullseye.BullseyeItemNoTpUseAnimation", typeof(BullseyeItemNoTpUseAnimation));
-
-			// Legacy
-			#pragma warning disable CS0618
-			api.RegisterItemClass("bullseye.ItemBow", typeof(BullseyeItemBow));
-			api.RegisterItemClass("bullseye.ItemSpear", typeof(BullseyeItemSpear));
-			api.RegisterItemClass("bullseye.ItemSling", typeof(BullseyeItemSling));
-
-			api.RegisterItemClass("bullseye.ItemArrow", typeof(BullseyeItemArrow));
-			api.RegisterItemClass("bullseye.ItemBullet", typeof(BullseyeItemBullet));
-			#pragma warning restore CS0618
 		}
 
 		private void RegisterEntityBehaviors(ICoreAPI api)
@@ -79,8 +69,6 @@ namespace Bullseye.Old
 			api.RegisterCollectibleBehaviorClass("Bullseye.ThrowableStone", typeof(BullseyeCollectibleBehaviorThrowableStone));
 
 			api.RegisterCollectibleBehaviorClass("Bullseye.Ammunition", typeof(BullseyeCollectibleBehaviorAmmunition));
-			//api.RegisterCollectibleBehaviorClass("Bullseye.Arrow", typeof(BullseyeCollectibleBehaviorArrow));
-			//api.RegisterCollectibleBehaviorClass("Bullseye.Bullet", typeof(BullseyeCollectibleBehaviorBullet));
 		}
 
 		public override void Dispose()

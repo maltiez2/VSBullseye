@@ -25,6 +25,8 @@ internal class ClientSideSettings
     public AimingType SpearAimingType { get; set; } = AimingType.Cursor;
     public AimingType ThrowableAimingType { get; set; } = AimingType.Cursor;
     public AimingType SlingAimingType { get; set; } = AimingType.Cursor;
+    public bool InvertMouseYAxis { get; set; } = false;
+    public float FieldOfView { get; set; } = 70f;
 }
 
 internal class ServerSideSettings
@@ -40,11 +42,13 @@ internal class ConfigSystem : ModSystem
 {
     public ClientSideSettings ClientSettings { get; set; } = new();
     public ServerSideSettings ServerSettings { get; set; } = new();
+    
+    public event Action<string>? SettingChanged;
 
     public override void Start(ICoreAPI api)
     {
-        api.Event.RegisterEventBusListener(SettingChanged, filterByEventName: "configlib:bullseye-continued:setting-changed");
-        api.Event.RegisterEventBusListener(SettingChanged, filterByEventName: "configlib:bullseye-continued:setting-loaded");
+        api.Event.RegisterEventBusListener(OnSettingChanged, filterByEventName: "configlib:bullseye-continued:setting-changed");
+        api.Event.RegisterEventBusListener(OnSettingChanged, filterByEventName: "configlib:bullseye-continued:setting-loaded");
 
         _api = api;
     }
@@ -74,7 +78,7 @@ internal class ConfigSystem : ModSystem
 
     private ICoreAPI? _api;
 
-    private void SettingChanged(string eventName, ref EnumHandling handling, IAttribute data)
+    private void OnSettingChanged(string eventName, ref EnumHandling handling, IAttribute data)
     {
         handling = EnumHandling.Handled;
 
@@ -82,13 +86,14 @@ internal class ConfigSystem : ModSystem
 
         string setting = dataTree.GetString("setting");
 
-        _api?.Logger.Debug($"[Bullseye] Set '{setting}' to '{dataTree.GetAsString("value")}'");
+        SettingChanged?.Invoke(setting);
+
+        _api?.Logger.VerboseDebug($"[Bullseye] Set '{setting}' to '{dataTree.GetAsString("value")}'");
         
         switch (setting)
         {
             case "AimDifficulty":
                 ServerSettings.AimDifficulty = dataTree.GetFloat("value");
-                
                 break;
             case "BowDamage":
                 ServerSettings.BowDamage = dataTree.GetFloat("value");
@@ -116,6 +121,12 @@ internal class ConfigSystem : ModSystem
                 break;
             case "SlingAimingType":
                 ClientSettings.SlingAimingType = (AimingType)dataTree.GetInt("value");
+                break;
+            case "InvertMouseYAxis":
+                ClientSettings.InvertMouseYAxis = dataTree.GetBool("value");
+                break;
+            case "FieldOfView":
+                ClientSettings.FieldOfView = dataTree.GetFloat("value");
                 break;
         }
     }
