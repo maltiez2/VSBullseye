@@ -18,7 +18,7 @@ internal class WeaponStats
 
     #region OLD
     // OLD
-    public string ammoType = null;
+    public string ammoType = "";
 
     // ItemRangedWeapon stats
     public float cooldownTime = 0.75f;
@@ -32,12 +32,9 @@ internal class WeaponStats
 
     // Client aiming modsystem stats
 
-
-
-
-    public string aimTexPartChargePath = null;
-    public string aimTexFullChargePath = null;
-    public string aimTexBlockedPath = null;
+    public string aimTexPartChargePath = "";
+    public string aimTexFullChargePath = "";
+    public string aimTexBlockedPath = "";
 
     public float aimFullChargeLeeway = 0.25f;
 
