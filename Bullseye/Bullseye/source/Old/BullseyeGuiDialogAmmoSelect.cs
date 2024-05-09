@@ -9,14 +9,14 @@ using Vintagestory.API.MathTools;
 
 namespace Bullseye.Old
 {
-	public class BullseyeGuiDialogAmmoSelect : GuiDialog
+	public class AmmoSelectDialog : GuiDialog
 	{
 		private BullseyeInventoryAmmoSelect inventoryAmmoSelect;
 
 		public override string ToggleKeyCombinationCode => "bullseye.ammotypeselect";
 		public override bool PrefersUngrabbedMouse => false;
 
-		public BullseyeGuiDialogAmmoSelect(ICoreClientAPI api)	: base(api)
+		public AmmoSelectDialog(ICoreClientAPI api)	: base(api)
 		{
 			inventoryAmmoSelect = new BullseyeInventoryAmmoSelect(api);
 		}

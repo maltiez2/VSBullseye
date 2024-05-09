@@ -68,7 +68,7 @@ namespace Bullseye.Old
 				rangedWeaponSystem.EntitySetAmmoType((Api as ICoreClientAPI).World.Player.Entity, AmmoCategory, selectedSlot.Itemstack);
 				rangedWeaponSystem.SendRangedWeaponAmmoSelectPacket(AmmoCategory, selectedSlot.Itemstack);
 
-				capi.Gui.OpenedGuis.Find((dialog) => dialog is BullseyeGuiDialogAmmoSelect)?.TryClose();
+				capi.Gui.OpenedGuis.Find((dialog) => dialog is AmmoSelectDialog)?.TryClose();
 			}
 
 			return InvNetworkUtil.GetActivateSlotPacket(slotId, op);
