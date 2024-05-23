@@ -1,4 +1,6 @@
-﻿using Bullseye.Ammo;
+﻿using Bullseye.Aiming;
+using Bullseye.Ammo;
+using Bullseye.RangedWeapon;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
@@ -13,13 +15,13 @@ internal class BullseyeModSystem : ModSystem
 
     public override void Start(ICoreAPI api)
     {
-        /*api.RegisterEntityBehaviorClass("Bullseye.aimingaccuracy", typeof(BullseyeEntityBehaviorAimingAccuracy));
-        api.RegisterCollectibleBehaviorClass("Bullseye.Throwable", typeof(BullseyeCollectibleBehaviorThrowable));
-        api.RegisterCollectibleBehaviorClass("Bullseye.Bow", typeof(BullseyeCollectibleBehaviorBow));
-        api.RegisterCollectibleBehaviorClass("Bullseye.Spear", typeof(BullseyeCollectibleBehaviorSpear));
-        api.RegisterCollectibleBehaviorClass("Bullseye.Sling", typeof(BullseyeCollectibleBehaviorSling));
-        api.RegisterCollectibleBehaviorClass("Bullseye.ThrowableStone", typeof(BullseyeCollectibleBehaviorThrowableStone));
-        api.RegisterCollectibleBehaviorClass("Bullseye.Ammunition", typeof(BullseyeCollectibleBehaviorAmmunition));*/
+        api.RegisterEntityBehaviorClass("Bullseye.aimingaccuracy", typeof(AimingAccuracyBehavior));
+        api.RegisterCollectibleBehaviorClass("Bullseye.Throwable", typeof(ThrowableBehavior));
+        api.RegisterCollectibleBehaviorClass("Bullseye.Bow", typeof(BowBehavior));
+        api.RegisterCollectibleBehaviorClass("Bullseye.Spear", typeof(SpearBehavior));
+        api.RegisterCollectibleBehaviorClass("Bullseye.Sling", typeof(SlingBehavior));
+        api.RegisterCollectibleBehaviorClass("Bullseye.ThrowableStone", typeof(StoneBehavior));
+        api.RegisterCollectibleBehaviorClass("Bullseye.Ammunition", typeof(AmmunitionBehavior));
     }
 
     public override void StartClientSide(ICoreClientAPI api)

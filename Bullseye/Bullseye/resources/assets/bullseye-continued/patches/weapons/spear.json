@@ -1,6 +1,4 @@
 [
-	{ "side": "Server", "file": "game:itemtypes/tool/spear", "op": "replace", "path": "/class", "value": "Bullseye.ItemMeleeSpear" },
-
 	{
 		"side": "Server", "file": "game:itemtypes/tool/spear", "op": "add", "path": "/behaviors/-", "value": 
 		{

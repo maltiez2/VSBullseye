@@ -1,6 +1,4 @@
 [
-	{ "side": "Server", "file": "game:itemtypes/resource/beenade", "op": "remove", "path": "/classByType/*-closed" },
-
 	{
 		"side": "Server", "file": "game:itemtypes/resource/beenade", "op": "add", "path": "/behaviorsByType", "value": 
 		{

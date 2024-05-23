@@ -51,7 +51,7 @@
 
   <!-- Submodules -->
   <PropertyGroup>
-    <SubmodulesDir>$(ProjectDir)\..</SubmodulesDir>
+    <SubmodulesDir>$(ProjectDir)\..\..</SubmodulesDir>
     <SubmoduleAMlib>$(SubmodulesDir)\vsmod_AnimationManagerLib\AnimationManager</SubmoduleAMlib>
     <SubModuleAMlibOutput>$(SubmoduleAMlib)\bin\$(Configuration)\Mods\animationmanagerlib\</SubModuleAMlibOutput>
   </PropertyGroup>
@@ -66,14 +66,14 @@
     <ModDir>$(ProjectDir)\$(OutputDir)</ModDir>
   </PropertyGroup>
 
-  <!-- For procedural aiming and drawing animations -->
-  <ItemGroup>
-    <ProjectReference Include="..\..\vsmod_AnimationManagerLib\AnimationManager\AnimationManager.csproj" />
-  </ItemGroup>
-
   <!-- References to libraries that are being used in project -->
   <ItemGroup>
     <PackageReference Include="VSImGui" Version="0.0.6" />
+    <!-- For procedural aiming and drawing animations -->
+    <Reference Include="AnimationManager">
+      <HintPath>$(SubModuleAMlibOutput)\AnimationManager.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <!-- Vintage Story dependencies: wont be copied into output directory -->
     <Reference Include="OpenTK.Compute">
       <HintPath>$(GameDirectory)\Lib\OpenTK.Compute.dll</HintPath>
@@ -145,9 +145,12 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Releases\" />
+  </ItemGroup>
 
   <!-- Creates/updates modinfo.json file in build directory -->
-  <Target Name="ModInfo" AfterTargets="Build">
+  <Target Name="ModInfo">
     <PropertyGroup>
       <ModInfo>
 {
@@ -174,11 +177,12 @@
   </Target>
 
   <!-- Copies modicon, assets folder and native libraries if they exist into output directory -->
-  <Target Name="CopyFilesToOutput" AfterTargets="ModInfo">
+  <Target Name="CopyFilesToOutput" AfterTargets="ModInfo" BeforeTargets="Build">
     <ItemGroup>
       <AssetsFolder Include="$(AssetsDir)\**\*.*" />
       <ModIcon Include="$(ModIconFile)" />
     </ItemGroup>
+    <RemoveDir Directories="$(OutputPath)assets" />
     <Copy SourceFiles="@(AssetsFolder)" DestinationFiles="@(AssetsFolder->'$(OutputPath)assets\%(RecursiveDir)%(Filename)%(Extension)')" Condition="Exists('$(AssetsDir)')" />
     <Copy SourceFiles="@(ModIcon)" DestinationFolder="$(OutputPath)" Condition="Exists('$(ModIconFile)')" />
   </Target>

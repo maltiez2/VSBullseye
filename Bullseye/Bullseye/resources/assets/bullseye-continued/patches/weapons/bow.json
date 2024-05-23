@@ -1,13 +1,14 @@
 [ 
-	{ "side": "Server", "file": "game:itemtypes/tool/bow", "op": "replace", "path": "/class", "value": "Bullseye.BullseyeItemNoTpUseAnimation" },
-
+	{
+		"file": "game:itemtypes/tool/bow", "op": "replace", "path": "/class", "value": "Item"
+	},
 	
 	{
 		"file": "game:itemtypes/tool/bow", "op": "add", "path": "/behaviors/-", "value": 
 		{
 			"name": "AnimatableProcedural",
 			"properties": {
-				"animated-shape": "bullseye:item/tool/bow/{type}-animated",
+				"animated-shape": "bullseye-continued:bows/{type}-animated",
 				"only-when-animating": false
 			}
 		}
