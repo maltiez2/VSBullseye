@@ -7,7 +7,6 @@ using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Util;
-using Vintagestory.Client.NoObf;
 using Vintagestory.GameContent;
 
 namespace Bullseye.RangedWeapon;
@@ -23,7 +22,7 @@ internal class RangedWeaponBehavior : CollectibleBehavior
         Api = api;
 
         System = api.ModLoader.GetModSystem<BullseyeModSystem>();
-        
+
         Aiming = System.AimingSystem;
         Config = api.ModLoader.GetModSystem<ConfigSystem>();
         SynchronizerClient = System.Synchronizer as SynchronizerClient;
@@ -86,7 +85,7 @@ internal class RangedWeaponBehavior : CollectibleBehavior
     public override bool OnHeldInteractStep(float secondsUsed, ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, ref EnumHandling handling)
     {
         if (Synchronizer == null || Stats == null) return false;
-        
+
         if (!Synchronizer.HasEntityCooldownPassed(byEntity.EntityId, Stats.CooldownTime))
         {
             handling = EnumHandling.PreventSubsequent;

@@ -1,4 +1,3 @@
-using Bullseye.Old;
 using Bullseye.RangedWeapon;
 using Vintagestory.API.Client;
 using Vintagestory.API.MathTools;
@@ -17,8 +16,6 @@ internal sealed class ClientAiming : IDisposable
 
     public float DriftMultiplier { get; set; } = 1f;
     public float TwitchMultiplier { get; set; } = 1f;
-    public BullseyeEnumWeaponReadiness WeaponReadiness { get; set; } = BullseyeEnumWeaponReadiness.Blocked;
-
 
     public ClientAiming(ICoreClientAPI api)
     {
@@ -103,7 +100,7 @@ internal sealed class ClientAiming : IDisposable
             SetAim();
         }
     }
-    
+
     public void SetReticleTextures(LoadedTexture partChargeTex, LoadedTexture fullChargeTex, LoadedTexture blockedTex)
     {
         _reticleRenderer.SetReticleTextures(partChargeTex, fullChargeTex, blockedTex);
@@ -113,7 +110,7 @@ internal sealed class ClientAiming : IDisposable
         _clientApi.Event.UnregisterRenderer(_reticleRenderer, EnumRenderStage.Ortho);
     }
 
-    
+
     private readonly NormalizedSimplexNoise _noiseGenerator = NormalizedSimplexNoise.FromDefaultOctaves(4, 1.0, 0.9, 123L);
     private readonly ConfigSystem _configSystem;
     private readonly Random _random = new();
@@ -126,7 +123,7 @@ internal sealed class ClientAiming : IDisposable
     private long twitchLastChangeMilliseconds;
     private long twitchLastStepMilliseconds;
     private Vec2f twitch = new();
-    
+
     private double[] viewport = new double[4];
     private double[] rayStart = new double[4];
     private double[] rayEnd = new double[4];
