@@ -1,5 +1,4 @@
 ﻿using Bullseye.Old;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
@@ -9,8 +8,8 @@ namespace Bullseye;
 
 internal class BullseyeModSystem : ModSystem
 {
-    public Aiming.ClientAiming? AimingSystem;
-    public RangedWeapon.Synchronizer? Synchronizer;
+    public Aiming.ClientAiming? AimingSystem { get; private set; }
+    public RangedWeapon.Synchronizer? Synchronizer { get; private set; }
 
     public override void Start(ICoreAPI api)
     {

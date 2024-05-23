@@ -29,7 +29,7 @@ internal class AimingAccuracyBehavior : EntityBehavior
             clientApi.Input.InWorldAction += InWorldAction;
         }
 
-        Rand = new Random((int)(entity.EntityId + entity.World.ElapsedMilliseconds));
+        _rand = new Random((int)(entity.EntityId + entity.World.ElapsedMilliseconds));
 
         _modifiers.Add(new BaseAimingAccuracy(_player, _clientAimingSystem));
         _modifiers.Add(new MovingAimingAccuracy(_player, _clientAimingSystem));
@@ -50,7 +50,7 @@ internal class AimingAccuracyBehavior : EntityBehavior
             return;
         }
 
-        if (!Stats.allowSprint)
+        if (!Stats.AllowSprint)
         {
             _player.CurrentControls &= ~EnumEntityActivity.SprintMode;
             _player.Controls.Sprint = false;
@@ -78,14 +78,14 @@ internal class AimingAccuracyBehavior : EntityBehavior
         return "bullseye.aimingaccuracy";
     }
 
-    private readonly Random Rand;
+    private readonly Random _rand;
     private readonly List<AccuracyModifier> _modifiers = new();
     private readonly ClientAiming? _clientAimingSystem;
     private readonly EntityAgent _player;
 
     private void InWorldAction(EnumEntityAction action, bool on, ref EnumHandling handled)
     {
-        if (IsAiming && !Stats.allowSprint && action == EnumEntityAction.Sprint && on)
+        if (IsAiming && !Stats.AllowSprint && action == EnumEntityAction.Sprint && on)
         {
             handled = EnumHandling.PreventDefault;
         }
@@ -116,8 +116,8 @@ internal class AimingAccuracyBehavior : EntityBehavior
 
         if (entity.World is IServerWorldAccessor && IsAiming)
         {
-            double rndpitch = Rand.NextDouble();
-            double rndyaw = Rand.NextDouble();
+            double rndpitch = _rand.NextDouble();
+            double rndyaw = _rand.NextDouble();
             entity.WatchedAttributes.SetDouble("aimingRandPitch", rndpitch);
             entity.WatchedAttributes.SetDouble("aimingRandYaw", rndyaw);
         }

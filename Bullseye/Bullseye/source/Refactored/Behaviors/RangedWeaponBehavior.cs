@@ -1,4 +1,5 @@
-﻿using Bullseye.Old;
+﻿using Bullseye.Aiming;
+using Bullseye.Ammo;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
@@ -6,6 +7,7 @@ using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Util;
+using Vintagestory.Client.NoObf;
 using Vintagestory.GameContent;
 
 namespace Bullseye.RangedWeapon;
@@ -14,18 +16,18 @@ internal class RangedWeaponBehavior : CollectibleBehavior
 {
     public RangedWeaponBehavior(CollectibleObject collObj) : base(collObj) { }
 
-    public string AmmoType => Stats?.ammoType ?? "";
+    public string AmmoType => Stats?.AmmoType ?? "";
 
     public override void OnLoaded(ICoreAPI api)
     {
-        API = api;
+        Api = api;
 
-        BullseyeModSystem system = api.ModLoader.GetModSystem<BullseyeModSystem>();
+        System = api.ModLoader.GetModSystem<BullseyeModSystem>();
         
-        Aiming = system.AimingSystem;
+        Aiming = System.AimingSystem;
         Config = api.ModLoader.GetModSystem<ConfigSystem>();
-        SynchronizerClient = system.Synchronizer as SynchronizerClient;
-        SynchronizerServer = system.Synchronizer as SynchronizerServer;
+        SynchronizerClient = System.Synchronizer as SynchronizerClient;
+        SynchronizerServer = System.Synchronizer as SynchronizerServer;
 
         Stats = collObj.Attributes.KeyExists("bullseyeWeaponStats") ? collObj.Attributes?["bullseyeWeaponStats"].AsObject<WeaponStats>() : new WeaponStats();
 
@@ -49,7 +51,7 @@ internal class RangedWeaponBehavior : CollectibleBehavior
 
     public override void OnHeldInteractStart(ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, bool firstEvent, ref EnumHandHandling handHandling, ref EnumHandling handling)
     {
-        if (handHandling == EnumHandHandling.PreventDefault || handling == EnumHandling.PreventDefault) return;
+        if (handHandling == EnumHandHandling.PreventDefault || handling == EnumHandling.PreventDefault || Stats == null) return;
         if (!CanStartAiming(slot, byEntity, blockSel, entitySel, firstEvent, ref handHandling, ref handling)) return;
 
         ItemSlot ammoSlot = GetNextAmmoSlot(byEntity, slot, true);
@@ -58,20 +60,20 @@ internal class RangedWeaponBehavior : CollectibleBehavior
         EntityProperties projectileEntity = GetProjectileEntityType(byEntity, slot, ammoSlot);
         if (projectileEntity == null) return;
 
-        if (byEntity.World is IClientWorldAccessor)
+        if (byEntity.World is IClientWorldAccessor && AimTexPartCharge != null && AimTexFullCharge != null && AimTexBlocked != null)
         {
-            if (AimTexPartCharge != null && AimTexFullCharge != null && AimTexBlocked != null) Aiming?.SetReticleTextures(AimTexPartCharge, AimTexFullCharge, AimTexBlocked);
+            Aiming?.SetReticleTextures(AimTexPartCharge, AimTexFullCharge, AimTexBlocked);
         }
 
-        RangedWeaponSystem.SetLastEntityRangedChargeData(byEntity.EntityId, slot);
+        SynchronizerServer?.SetLastEntityRangedChargeData(byEntity.EntityId, slot);
 
-        byEntity.GetBehavior<BullseyeEntityBehaviorAimingAccuracy>().SetRangedWeaponStats(WeaponStats);
+        byEntity.GetBehavior<AimingAccuracyBehavior>().Stats = Stats;
 
         // Not ideal to code the aiming controls this way. Needs an elegant solution - maybe an event bus?
         byEntity.Attributes.SetInt("bullseyeAiming", 1);
         byEntity.Attributes.SetInt("bullseyeAimingCancel", 0);
 
-        if (!WeaponStats.allowSprint)
+        if (!Stats.AllowSprint)
         {
             byEntity.Controls.Sprint = false;
             byEntity.ServerControls.Sprint = false;
@@ -83,7 +85,9 @@ internal class RangedWeaponBehavior : CollectibleBehavior
     }
     public override bool OnHeldInteractStep(float secondsUsed, ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, ref EnumHandling handling)
     {
-        if (!RangedWeaponSystem.HasEntityCooldownPassed(byEntity.EntityId, WeaponStats.cooldownTime))
+        if (Synchronizer == null || Stats == null) return false;
+        
+        if (!Synchronizer.HasEntityCooldownPassed(byEntity.EntityId, Stats.CooldownTime))
         {
             handling = EnumHandling.PreventSubsequent;
             return false;
@@ -101,11 +105,24 @@ internal class RangedWeaponBehavior : CollectibleBehavior
                 // --- OR if the weapon was held so long that accuracy is starting to get bad again, for weapons that have it
                 // - Show red "blocked" reticle if the weapon can't shoot yet
                 bool showBlocked = secondsUsed < GetEntityChargeTime(byEntity);
-                bool showPartCharged = secondsUsed < WeaponStats.accuracyStartTime / byEntity.Stats.GetBlended("rangedWeaponsSpeed") + WeaponStats.aimFullChargeLeeway;
-                showPartCharged = showPartCharged || secondsUsed > WeaponStats.accuracyOvertimeStart + WeaponStats.accuracyStartTime && WeaponStats.accuracyOvertime > 0;
+                bool showPartCharged = secondsUsed < Stats.accuracyStartTime / byEntity.Stats.GetBlended("rangedWeaponsSpeed") + Stats.aimFullChargeLeeway;
+                showPartCharged = showPartCharged || secondsUsed > Stats.accuracyOvertimeStart + Stats.accuracyStartTime && Stats.accuracyOvertime > 0;
 
-                CoreClientSystem.WeaponReadiness = showBlocked ? BullseyeEnumWeaponReadiness.Blocked :
-                                                    showPartCharged ? BullseyeEnumWeaponReadiness.PartCharge : BullseyeEnumWeaponReadiness.FullCharge;
+                if (Aiming != null)
+                {
+                    if (showBlocked)
+                    {
+                        Aiming.Renderer.AimingState = WeaponAimingState.Blocked;
+                    }
+                    else if (showPartCharged)
+                    {
+                        Aiming.Renderer.AimingState = WeaponAimingState.PartCharge;
+                    }
+                    else
+                    {
+                        Aiming.Renderer.AimingState = WeaponAimingState.FullCharge;
+                    }
+                }
             }
 
             handling = EnumHandling.PreventDefault;
@@ -141,17 +158,17 @@ internal class RangedWeaponBehavior : CollectibleBehavior
 
         EntityPlayer entityPlayer = byEntity as EntityPlayer;
 
-        if (!byEntity.Alive || secondsUsed < GetChargeNeeded(API, byEntity))
+        if (!byEntity.Alive || secondsUsed < GetChargeNeeded(Api, byEntity))
         {
             OnAimingCancel(secondsUsed, slot, byEntity, !byEntity.Alive ? EnumItemUseCancelReason.Death : EnumItemUseCancelReason.ReleasedMouse);
             handling = EnumHandling.PreventDefault;
             return;
         }
 
-        if (API.Side == EnumAppSide.Server)
+        if (Api.Side == EnumAppSide.Server)
         {
             // Just to make sure animations etc. get stopped if a shot looks legit on the server but was stopped on the client
-            API.Event.RegisterCallback((ms) =>
+            Api.Event.RegisterCallback((ms) =>
             {
                 if (byEntity.Attributes.GetInt("bullseyeAiming") == 0)
                 {
@@ -161,11 +178,12 @@ internal class RangedWeaponBehavior : CollectibleBehavior
         }
         else
         {
-            Vec3d targetVec = CoreClientSystem.TargetVec;
-
-            Shoot(slot, byEntity, targetVec);
-
-            RangedWeaponSystem.SendRangedWeaponFirePacket(collObj.Id, targetVec);
+            if (Aiming != null)
+            {
+                Vec3d targetVec = Aiming.TargetVec;
+                Shoot(slot, byEntity, targetVec);
+                SynchronizerClient?.SendRangedWeaponFirePacket(collObj.Id, targetVec);
+            }
         }
 
         handling = EnumHandling.PreventDefault;
@@ -199,7 +217,7 @@ internal class RangedWeaponBehavior : CollectibleBehavior
 
             if (invslot.Itemstack != null && CanUseAmmoSlot(invslot))
             {
-                ItemStack ammoStack = ammoTypes.Find(itemstack => itemstack.Equals(API.World, invslot.Itemstack, GlobalConstants.IgnoredStackAttributes));
+                ItemStack ammoStack = ammoTypes.Find(itemstack => itemstack.Equals(Api.World, invslot.Itemstack, GlobalConstants.IgnoredStackAttributes));
 
                 if (ammoStack == null)
                 {
@@ -247,7 +265,7 @@ internal class RangedWeaponBehavior : CollectibleBehavior
         ITreeAttribute treeAttribute = entity.Attributes.GetTreeAttribute("bullseyeSelectedAmmo");
 
         ItemStack resultItemstack = treeAttribute?.GetItemstack(AmmoType, null);
-        resultItemstack?.ResolveBlockOrItem(API.World);
+        resultItemstack?.ResolveBlockOrItem(Api.World);
 
         return resultItemstack;
     }
@@ -269,7 +287,7 @@ internal class RangedWeaponBehavior : CollectibleBehavior
             if (invslot.Itemstack != null && CanUseAmmoSlot(invslot))
             {
                 // If we found the selected ammo type or no ammo type is specifically selected, return the first one we find
-                if (selectedAmmoType == null || invslot.Itemstack.Equals(API.World, selectedAmmoType, GlobalConstants.IgnoredStackAttributes))
+                if (selectedAmmoType == null || invslot.Itemstack.Equals(Api.World, selectedAmmoType, GlobalConstants.IgnoredStackAttributes))
                 {
                     ammoSlot = invslot;
                     return false;
@@ -291,10 +309,10 @@ internal class RangedWeaponBehavior : CollectibleBehavior
     {
         float damage = 0f;
 
-        if (ammoSlot?.Itemstack?.Collectible != null)
+        if (ammoSlot?.Itemstack?.Collectible != null && Stats != null)
         {
-            BullseyeCollectibleBehaviorAmmunition cbAmmunition = ammoSlot.Itemstack.Collectible.GetCollectibleBehavior<BullseyeCollectibleBehaviorAmmunition>(true);
-            damage = cbAmmunition != null ? cbAmmunition.GetDamage(ammoSlot, WeaponStats.ammoType, byEntity.World) : ammoSlot.Itemstack.ItemAttributes?["damage"].AsFloat(0) ?? 0f;
+            AmmunitionBehavior cbAmmunition = ammoSlot.Itemstack.Collectible.GetCollectibleBehavior<AmmunitionBehavior>(true);
+            damage = cbAmmunition != null ? cbAmmunition.GetDamage(ammoSlot, Stats.AmmoType, byEntity.World) : ammoSlot.Itemstack.ItemAttributes?["damage"].AsFloat(0) ?? 0f;
         }
 
         // Weapon modifiers
@@ -306,11 +324,11 @@ internal class RangedWeaponBehavior : CollectibleBehavior
     }
     public virtual float GetProjectileVelocity(EntityAgent byEntity, ItemSlot weaponSlot, ItemSlot ammoSlot)
     {
-        return (WeaponStats.projectileVelocity + (ammoSlot.Itemstack?.ItemAttributes?["velocityModifier"].AsFloat(0f) ?? 0f)) * byEntity.Stats.GetBlended("bowDrawingStrength");
+        return Stats == null ? 0 : (Stats.ProjectileVelocity + (ammoSlot.Itemstack?.ItemAttributes?["velocityModifier"].AsFloat(0f) ?? 0f)) * byEntity.Stats.GetBlended("bowDrawingStrength");
     }
     public virtual float GetProjectileSpread(EntityAgent byEntity, ItemSlot weaponSlot, ItemSlot ammoSlot)
     {
-        return WeaponStats.projectileSpread + (ammoSlot.Itemstack?.ItemAttributes?["spreadModifier"].AsFloat(0f) ?? 0f);
+        return Stats == null ? 0 : Stats.ProjectileSpread + (ammoSlot.Itemstack?.ItemAttributes?["spreadModifier"].AsFloat(0f) ?? 0f);
     }
     public virtual float GetProjectileDropChance(EntityAgent byEntity, ItemSlot weaponSlot, ItemSlot ammoSlot) => 0f;
     public virtual float GetProjectileWeight(EntityAgent byEntity, ItemSlot weaponSlot, ItemSlot ammoSlot) => 0.1f;
@@ -351,7 +369,7 @@ internal class RangedWeaponBehavior : CollectibleBehavior
         Entity projectileEntity = CreateProjectileEntity(byEntity, projectileEntityType, ammoStack, damage, dropChance, weight, ammoDurabilityCost);
         if (projectileEntity == null)
         {
-            API.Logger.Error($"[Bullseye] Ranged weapon {collObj.Code} tried to shoot, but failed to create the projectile entity!");
+            Api.Logger.Error($"[Bullseye] Ranged weapon {collObj.Code} tried to shoot, but failed to create the projectile entity!");
             return;
         }
 
@@ -367,7 +385,7 @@ internal class RangedWeaponBehavior : CollectibleBehavior
 
         byEntity.World.SpawnEntity(projectileEntity);
 
-        RangedWeaponSystem.StartEntityCooldown(byEntity.EntityId);
+        Synchronizer?.StartEntityCooldown(byEntity.EntityId);
 
         OnShot(weaponSlot, projectileEntity, byEntity);
 
@@ -396,10 +414,12 @@ internal class RangedWeaponBehavior : CollectibleBehavior
     }
 
 
-    protected ICoreAPI? API;
+    protected ICoreAPI? Api;
     protected ConfigSystem? Config;
     protected WeaponStats? Stats;
     protected Aiming.ClientAiming? Aiming;
+    protected BullseyeModSystem? System;
+    protected RangedWeapon.Synchronizer? Synchronizer => Api?.Side == EnumAppSide.Client ? SynchronizerClient : SynchronizerServer;
     protected RangedWeapon.SynchronizerClient? SynchronizerClient;
     protected RangedWeapon.SynchronizerServer? SynchronizerServer;
 
@@ -409,7 +429,7 @@ internal class RangedWeaponBehavior : CollectibleBehavior
 
     protected float GetEntityChargeTime(Entity entity)
     {
-        return WeaponStats.chargeTime / entity.Stats.GetBlended("rangedWeaponsSpeed");
+        return Stats == null ? 0 : Stats.ChargeTime / entity.Stats.GetBlended("rangedWeaponsSpeed");
     }
     protected virtual void PrepareHeldInteractionHelp()
     {
@@ -417,7 +437,7 @@ internal class RangedWeaponBehavior : CollectibleBehavior
         {
             string interactionsKey = $"{collObj.Attributes["interactionCollectibleCode"].AsString("")}RangedInteractions";
 
-            _interactions = ObjectCacheUtil.GetOrCreate(API, interactionsKey, () =>
+            _interactions = ObjectCacheUtil.GetOrCreate(Api, interactionsKey, () =>
             {
                 List<ItemStack> stacks = null;
 
@@ -425,7 +445,7 @@ internal class RangedWeaponBehavior : CollectibleBehavior
                 {
                     stacks = new List<ItemStack>();
 
-                    foreach (CollectibleObject obj in API.World.Collectibles)
+                    foreach (CollectibleObject obj in Api.World.Collectibles)
                     {
                         if (obj.Code.Path.StartsWith(collObj.Attributes["interactionCollectibleCode"].AsString()))
                         {
@@ -526,7 +546,7 @@ internal class RangedWeaponBehavior : CollectibleBehavior
         Vec3d horizontalAxis = groundVec.Cross(up);
 
         double[] matrix = Mat4d.Create();
-        Mat4d.Rotate(matrix, matrix, WeaponStats.zeroingAngle * GameMath.DEG2RAD, new double[] { horizontalAxis.X, horizontalAxis.Y, horizontalAxis.Z });
+        Mat4d.Rotate(matrix, matrix, Stats?.ZeroingAngle ?? 0 * GameMath.DEG2RAD, new double[] { horizontalAxis.X, horizontalAxis.Y, horizontalAxis.Z });
         double[] matrixVec = new double[] { targetVec.X, targetVec.Y, targetVec.Z, 0 };
         matrixVec = Mat4d.MulWithVec4(matrix, matrixVec);
 
@@ -547,11 +567,11 @@ internal class RangedWeaponBehavior : CollectibleBehavior
         Vec3d velocity = newAngle * projectileSpeed * GlobalConstants.PhysicsFrameTime;
 
         // What the heck? Server's SidedPos.Motion is somehow twice that of client's!
-        velocity += API.Side == EnumAppSide.Client ? byEntity.SidedPos.Motion : byEntity.SidedPos.Motion / 2;
+        velocity += Api.Side == EnumAppSide.Client ? byEntity.SidedPos.Motion : byEntity.SidedPos.Motion / 2;
 
         if (byEntity.MountedOn is Entity mountedEntity)
         {
-            velocity += API.Side == EnumAppSide.Client ? mountedEntity.SidedPos.Motion : mountedEntity.SidedPos.Motion / 2;
+            velocity += Api.Side == EnumAppSide.Client ? mountedEntity.SidedPos.Motion : mountedEntity.SidedPos.Motion / 2;
         }
 
         return velocity;
@@ -565,7 +585,7 @@ internal class RangedWeaponBehavior : CollectibleBehavior
     {
         if (byEntity.Controls.ShiftKey && byEntity.Controls.CtrlKey) return false;
 
-        if (!RangedWeaponSystem.HasEntityCooldownPassed(byEntity.EntityId, WeaponStats.cooldownTime))
+        if (Synchronizer?.HasEntityCooldownPassed(byEntity.EntityId, Stats?.CooldownTime ?? 0) == false)
         {
             handHandling = EnumHandHandling.PreventDefault;
             handling = EnumHandling.PreventDefault;
@@ -581,17 +601,16 @@ internal class RangedWeaponBehavior : CollectibleBehavior
 
     private void ServerHandleFire(string eventName, ref EnumHandling handling, IAttribute data)
     {
-        TreeAttribute tree = data as TreeAttribute;
-        int itemId = tree.GetInt("itemId");
+        TreeAttribute? tree = data as TreeAttribute;
+        int itemId = tree?.GetInt("itemId") ?? 0;
 
-        if (itemId == collObj.Id)
+        if (itemId == collObj.Id && SynchronizerServer != null && tree != null)
         {
             long entityId = tree.GetLong("entityId");
 
-            ItemSlot itemSlot = RangedWeaponSystem.GetLastEntityRangedItemSlot(entityId);
-            EntityAgent byEntity = API.World.GetEntityById(entityId) as EntityAgent;
+            ItemSlot? itemSlot = SynchronizerServer.GetLastEntityRangedItemSlot(entityId);
 
-            if (RangedWeaponSystem.GetEntityChargeStart(entityId) + GetEntityChargeTime(byEntity) < API.World.ElapsedMilliseconds / 1000f && byEntity.Alive && itemSlot != null)
+            if (Api?.World.GetEntityById(entityId) is EntityAgent byEntity && SynchronizerServer.GetEntityChargeStart(entityId) + GetEntityChargeTime(byEntity) < Api.World.ElapsedMilliseconds / 1000f && byEntity.Alive && itemSlot != null)
             {
                 Vec3d targetVec = new(tree.GetDouble("aimX"), tree.GetDouble("aimY"), tree.GetDouble("aimZ"));
 

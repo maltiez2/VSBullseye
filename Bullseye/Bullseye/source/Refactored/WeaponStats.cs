@@ -16,18 +16,26 @@ internal class WeaponStats
     public float VerticalOffset = -0.15f;
     #endregion
 
+    #region Other
+    public bool AllowSprint = true;
+    public string AmmoType = "";
+    #endregion
+
+    #region RangedWeapon stats
+    public float ProjectileVelocity = 30f; // Vanilla arrow speed
+    public float ProjectileSpread = 0f; // In degrees
+    public float ChargeTime = 0.5f;
+    public float ZeroingAngle = 0f;
+    public float CooldownTime = 0.75f;
+    #endregion
+
     #region OLD
     // OLD
-    public string ammoType = "";
+
 
     // ItemRangedWeapon stats
-    public float cooldownTime = 0.75f;
-    public float chargeTime = 0.5f;
-    public float projectileVelocity = 30f; // Vanilla arrow speed
-    public float projectileSpread = 0f; // In degrees
-    public float zeroingAngle = 0f;
-
-    public bool allowSprint = true;
+    
+    
     public float moveSpeedPenalty = 0f;
 
     // Client aiming modsystem stats

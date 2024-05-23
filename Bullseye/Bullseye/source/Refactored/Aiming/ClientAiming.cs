@@ -13,7 +13,8 @@ internal sealed class ClientAiming : IDisposable
     public Vec3d TargetVec { get; private set; } = new Vec3d();
     public Vec2f Aim { get; private set; } = new Vec2f();
     public Vec2f AimOffset { get; private set; } = new Vec2f();
-    
+    public ReticleRenderer Renderer => _reticleRenderer;
+
     public float DriftMultiplier { get; set; } = 1f;
     public float TwitchMultiplier { get; set; } = 1f;
     public BullseyeEnumWeaponReadiness WeaponReadiness { get; set; } = BullseyeEnumWeaponReadiness.Blocked;
