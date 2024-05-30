@@ -8,6 +8,7 @@ using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Util;
 using Vintagestory.GameContent;
+using VSImGui.Debug;
 
 namespace Bullseye.RangedWeapon;
 
@@ -182,6 +183,8 @@ internal class RangedWeaponBehavior : CollectibleBehavior
                 Vec3d targetVec = Aiming.TargetVec;
                 Shoot(slot, byEntity, targetVec);
                 SynchronizerClient?.SendRangedWeaponFirePacket(collObj.Id, targetVec);
+
+                Aiming.Renderer.AimingState = WeaponAimingState.None;
             }
         }
 
@@ -509,10 +512,10 @@ internal class RangedWeaponBehavior : CollectibleBehavior
             entityProjectile.SetRotation();
 
 #if DEBUG
-				if (byEntity.World.Side == EnumAppSide.Server && byEntity is EntityPlayer entityPlayer)
-				{
-					api.ModLoader.GetModSystem<BullseyeSystemDebug>().SetFollowArrow(entityProjectile, entityPlayer);
-				}
+            /*if (byEntity.World.Side == EnumAppSide.Server && byEntity is EntityPlayer entityPlayer)
+            {
+                api.ModLoader.GetModSystem<BullseyeSystemDebug>().SetFollowArrow(entityProjectile, entityPlayer);
+            }*/
 #endif
         }
 
@@ -545,7 +548,7 @@ internal class RangedWeaponBehavior : CollectibleBehavior
         Vec3d horizontalAxis = groundVec.Cross(up);
 
         double[] matrix = Mat4d.Create();
-        Mat4d.Rotate(matrix, matrix, Stats?.ZeroingAngle ?? 0 * GameMath.DEG2RAD, new double[] { horizontalAxis.X, horizontalAxis.Y, horizontalAxis.Z });
+        Mat4d.Rotate(matrix, matrix, (Stats?.ZeroingAngle ?? 0 - 90) * GameMath.DEG2RAD, new double[] { horizontalAxis.X, horizontalAxis.Y, horizontalAxis.Z });
         double[] matrixVec = new double[] { targetVec.X, targetVec.Y, targetVec.Z, 0 };
         matrixVec = Mat4d.MulWithVec4(matrix, matrixVec);
 
@@ -565,6 +568,7 @@ internal class RangedWeaponBehavior : CollectibleBehavior
 
         Vec3d velocity = newAngle * projectileSpeed * GlobalConstants.PhysicsFrameTime;
 
+
         // What the heck? Server's SidedPos.Motion is somehow twice that of client's!
         velocity += Api.Side == EnumAppSide.Client ? byEntity.SidedPos.Motion : byEntity.SidedPos.Motion / 2;
 
@@ -572,6 +576,8 @@ internal class RangedWeaponBehavior : CollectibleBehavior
         {
             velocity += Api.Side == EnumAppSide.Client ? mountedEntity.SidedPos.Motion : mountedEntity.SidedPos.Motion / 2;
         }
+
+        
 
         return velocity;
     }

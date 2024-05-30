@@ -32,7 +32,6 @@ internal sealed class ClientAiming : IDisposable
     {
         _weaponStats = stats;
 
-        // If 15 seconds passed since we last made a shot, reset aim to centre of the screen
         if (_clientApi.World.ElapsedMilliseconds - lastAimingEndTime > aimResetTime)
         {
             ResetAim();

@@ -150,7 +150,7 @@
   </ItemGroup>
 
   <!-- Creates/updates modinfo.json file in build directory -->
-  <Target Name="ModInfo">
+  <Target Name="ModInfo" BeforeTargets="CopyFilesToOutput">
     <PropertyGroup>
       <ModInfo>
 {

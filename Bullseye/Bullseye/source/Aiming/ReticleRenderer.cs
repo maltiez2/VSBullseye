@@ -36,9 +36,9 @@ public sealed class ReticleRenderer : IRenderer
 
         _aimTextureThrowCircle = new LoadedTexture(api);
 
-        api.Render.GetOrLoadTexture(new AssetLocation("bullseye-continued", "gui/aimdefaultpart.png"), ref blockedReticle);
-        api.Render.GetOrLoadTexture(new AssetLocation("bullseye-continued", "gui/aimdefaultfull.png"), ref partChargeReticle);
-        api.Render.GetOrLoadTexture(new AssetLocation("bullseye-continued", "gui/aimblockeddefault.png"), ref fullChargeReticle);
+        api.Render.GetOrLoadTexture(new AssetLocation("bullseye-continued", "gui/aimblockeddefault.png"), ref blockedReticle);
+        api.Render.GetOrLoadTexture(new AssetLocation("bullseye-continued", "gui/aimdefaultpart.png"), ref partChargeReticle);
+        api.Render.GetOrLoadTexture(new AssetLocation("bullseye-continued", "gui/aimdefaultfull.png"), ref fullChargeReticle);
         api.Render.GetOrLoadTexture(new AssetLocation("bullseye-continued", "gui/throw_circle.png"), ref _aimTextureThrowCircle);
 
         _defaultTextures[WeaponAimingState.Blocked] = blockedReticle;
@@ -56,7 +56,7 @@ public sealed class ReticleRenderer : IRenderer
 
         Vec2f currentAim = _aimingPoint.Invoke();
 
-        LoadedTexture texture = _currentTextures[AimingState];
+        LoadedTexture texture = _defaultTextures[AimingState];
 
         float reticleScale = ReticleScaling ? RuntimeEnv.GUIScale : 1f;
 
