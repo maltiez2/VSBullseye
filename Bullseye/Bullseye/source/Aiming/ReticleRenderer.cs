@@ -56,7 +56,7 @@ public sealed class ReticleRenderer : IRenderer
 
         Vec2f currentAim = _aimingPoint.Invoke();
 
-        LoadedTexture texture = _defaultTextures[AimingState];
+        LoadedTexture texture = _currentTextures[AimingState];
 
         float reticleScale = ReticleScaling ? RuntimeEnv.GUIScale : 1f;
 
