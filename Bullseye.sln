@@ -5,8 +5,6 @@ VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bullseye", "Bullseye\Bullseye\Bullseye.csproj", "{7DFD0988-B852-4A45-813C-90EDDAD85E12}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnimationManager", "vsmod_AnimationManagerLib\AnimationManager\AnimationManager.csproj", "{7F795455-F4C0-47AD-ABB6-3A8F99DE0F67}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{7DFD0988-B852-4A45-813C-90EDDAD85E12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DFD0988-B852-4A45-813C-90EDDAD85E12}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DFD0988-B852-4A45-813C-90EDDAD85E12}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7F795455-F4C0-47AD-ABB6-3A8F99DE0F67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7F795455-F4C0-47AD-ABB6-3A8F99DE0F67}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7F795455-F4C0-47AD-ABB6-3A8F99DE0F67}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7F795455-F4C0-47AD-ABB6-3A8F99DE0F67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
