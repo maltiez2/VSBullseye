@@ -1,0 +1,17 @@
+{
+  "type": "code",
+  "name": "Bullseye",
+  "modid": "bullseye-continued",
+  "version": "2.6.0",
+
+  "description": "A vanilla-friendly rebalance and overhaul of ranged weapons.",
+  "authors": [ "TeacupAngel", "Maltiez" ],
+
+  "dependencies": {
+    "game": "*"
+  },
+
+  "side" : "Universal",
+  "requiredOnClient": true,
+  "requiredOnServer": true
+}

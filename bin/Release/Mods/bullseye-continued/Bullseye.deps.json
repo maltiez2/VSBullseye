@@ -1,0 +1,79 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v7.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v7.0": {
+      "Bullseye/1.0.0": {
+        "dependencies": {
+          "VSImGui": "0.0.6"
+        },
+        "runtime": {
+          "Bullseye.dll": {}
+        }
+      },
+      "VSImGui/0.0.6": {
+        "dependencies": {
+          "VSImGui_DebugTools": "0.0.5"
+        },
+        "runtime": {
+          "lib/net7.0/ImGui.NET.dll": {
+            "assemblyVersion": "1.89.9.2",
+            "fileVersion": "1.89.9.2"
+          },
+          "lib/net7.0/ImGuiController_OpenTK.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          },
+          "lib/net7.0/ImGuizmo.NET.dll": {
+            "assemblyVersion": "1.61.0.0",
+            "fileVersion": "1.61.0.0"
+          },
+          "lib/net7.0/ImNodes.NET.dll": {
+            "assemblyVersion": "0.3.0.0",
+            "fileVersion": "0.3.0.0"
+          },
+          "lib/net7.0/ImPlot.NET.dll": {
+            "assemblyVersion": "0.8.0.0",
+            "fileVersion": "0.8.0.0"
+          },
+          "lib/net7.0/VSImGui.dll": {
+            "assemblyVersion": "0.0.6.0",
+            "fileVersion": "0.0.6.0"
+          }
+        }
+      },
+      "VSImGui_DebugTools/0.0.5": {
+        "runtime": {
+          "lib/net7.0/VSImGui_DebugTools.dll": {
+            "assemblyVersion": "0.0.5.0",
+            "fileVersion": "0.0.5.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Bullseye/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "VSImGui/0.0.6": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-w3m5Q1gO/EMQliuXDHj1VxTqsiW3AoKb1bnUlq1TiBKoOzBfgn2y7+w8e5/08sw5Ve9+vCKWy/18aGdqxmntmA==",
+      "path": "vsimgui/0.0.6",
+      "hashPath": "vsimgui.0.0.6.nupkg.sha512"
+    },
+    "VSImGui_DebugTools/0.0.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Tqe9ZqXf8zBr+ItDnftfxApeRsD4/P/CuL401I4O9RKSuqd+n3BaU9Ac7ajm11WSRqhz/oIqeGLqgb1CQ9kMmA==",
+      "path": "vsimgui_debugtools/0.0.5",
+      "hashPath": "vsimgui_debugtools.0.0.5.nupkg.sha512"
+    }
+  }
+}
