@@ -109,7 +109,7 @@
 	{ "side": "Server", "file": "game:itemtypes/tool/spear", "op": "add", "path": "/variantgroups/1/states/-", "value": "iron" },
 	{ "side": "Server", "file": "game:itemtypes/tool/spear", "op": "add", "path": "/variantgroups/1/states/-", "value": "meteoriciron" },
 	{ "side": "Server", "file": "game:itemtypes/tool/spear", "op": "add", "path": "/variantgroups/1/states/-", "value": "steel" },
-	{ "side": "Server", "file": "game:itemtypes/tool/spear", "op": "add", "path": "/shapeByType/@spear-generic-(iron|meteoriciron|steel)", "value": { "base": "bullseye-continued:item/tool/spear/spear-iron" } },
+	{ "side": "Server", "file": "game:itemtypes/tool/spear", "op": "add", "path": "/shapeByType/@spear-generic-(iron|meteoriciron|steel)", "value": { "base": "bullseye-continued:spears/spear-iron" } },
 
 	{ "side": "Server", "file": "game:itemtypes/tool/spear", "op": "move", "frompath": "/texturesByType/spear-generic-*", "path": "/move-temp"},
 	{ "side": "Server", "file": "game:itemtypes/tool/spear", "op": "add", "path": "/texturesByType/@spear-generic-(iron|meteoriciron|steel)", "value": { "material": { "base": "game:block/metal/ingot/{material}" } } },

@@ -238,15 +238,6 @@ namespace Bullseye
             _followFactor_Y = _properties["followVertical"].AsFloat(_followFactor_Y);
             _followOffset_X = _properties["offsetHorizontal"].AsFloat(_followOffset_X);
             _followOffset_Y = _properties["offsetVertical"].AsFloat(_followOffset_Y);
-#if DEBUG
-			VSImGui.DebugWindow.FloatSlider("bullseye", $"aiming ({collObj.Code})", $"_followFactor_X##{collObj.Code}", 0, 0.2f, () => _followFactor_X, value => _followFactor_X = value);
-            VSImGui.DebugWindow.FloatSlider("bullseye", $"aiming ({collObj.Code})", $"_followFactor_Y##{collObj.Code}", 0, 0.2f, () => _followFactor_Y, value => _followFactor_Y = value);
-            VSImGui.DebugWindow.FloatSlider("bullseye", $"aiming ({collObj.Code})", $"_followOffset_X##{collObj.Code}", -25, 25, () => _followOffset_X, value => _followOffset_X = value);
-            VSImGui.DebugWindow.FloatSlider("bullseye", $"aiming ({collObj.Code})", $"_followOffset_Y##{collObj.Code}", -25, 25, () => _followOffset_Y, value => _followOffset_Y = value);
-            VSImGui.DebugWindow.FloatSlider("bullseye", $"aiming ({collObj.Code})", $"_followTpFactor##{collObj.Code}", 0, 1.0f, () => _followTpFactor, value => _followTpFactor = value);
-            VSImGui.DebugWindow.FloatSlider("bullseye", $"aiming ({collObj.Code})", $"_followSmoothFactor##{collObj.Code}", 0, 2.0f, () => _followSmoothFactor, value => _followSmoothFactor = value);
-            VSImGui.DebugWindow.FloatDrag("bullseye", $"aiming ({collObj.Code})", $"_timeModifier##{collObj.Code}",() => _timeModifier, value => _timeModifier = value);
-#endif
         }
 
         protected void SetAimAnimation(ICoreClientAPI capi)
