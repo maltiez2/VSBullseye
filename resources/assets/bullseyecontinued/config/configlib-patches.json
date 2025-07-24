@@ -2,43 +2,46 @@
   "version": 3,
   "patches": {
     "string": {
-      "game:itemtypes/combatoverhaul/spear.json": {
+      "game:itemtypes/bullseyecontinued/spear.json": {
         "attributes/ThrowAttack/Aiming/CursorType": "spears_aiming_cursor_type",
         "behaviors/1/properties/stats/HitSound": "(arrow_ping_sound_on_hit) ? value : empty_string"
       },
-      "game:itemtypes/combatoverhaul/arrow.json": {
+      "game:itemtypes/bullseyecontinued/arrow.json": {
         "behaviors/0/properties/stats/HitSound": "(arrow_ping_sound_on_hit) ? value : empty_string"
       },
-      "combatoverhaul:config/settings.json": {
+      "bullseyecontinued:config/settings.json": {
         "BowsAimingCursorType": "bows_aiming_cursor_type"
       }
     },
     "number": {
-      "combatoverhaul:entities/spear.json": {
+      "bullseyecontinued:entities/spear.json": {
         "client/behaviors/0/airDragFactor": "value / spears_thrown_distance",
         "client/behaviors/0/gravityFactor": "value / spears_thrown_distance",
         "server/behaviors/0/airDragFactor": "value / spears_thrown_distance",
         "server/behaviors/0/gravityFactor": "value / spears_thrown_distance"
       },
-      "game:itemtypes/combatoverhaul/bow.json": {
+      "game:itemtypes/bullseyecontinued/bow.json": {
         "attributes/AimingByType/@@*/AimDifficulty": "bow_aiming_difficulty",
         "attributes/ArrowDamageMultiplierByType/@@*": "value * bows_damage_multiplier"
       },
-      "combatoverhaul:patches/weapons/spear.json": {
+      "bullseyecontinued:patches/weapons/spear.json": {
         "1/value/Aiming/AimDifficulty": "spears_aiming_difficulty",
         "3/value/properties/stats/DamageStatsByType/@@*/Damage": "value * spears_range_damage_multiplier"
       },
-      "combatoverhaul:config/settings.json": {
+      "bullseyecontinued:config/settings.json": {
         "BowsAimingHorizontalLimit": "value * bow_aiming_horisontal_limit",
         "BowsAimingVerticalLimit": "value * bow_aiming_vertical_limit"
       },
-      "combatoverhaul:patches/tools/pickaxe.json": {
+      "bullseyecontinued:patches/tools/pickaxe.json": {
         "0/value/AnimationSpeedBonusFromMiningSpeed": "tool_animation_speed_bonus"
       }
     },
     "boolean": {
-      "game:itemtypes/combatoverhaul/bow.json": {
+      "game:itemtypes/bullseyecontinued/bow.json": {
         "attributes/TwoHanded": "bow_two_handed"
+      },
+      "bullseyecontinued:patches/weapons/spear.json": {
+        "-/enabled": "spears_enabled"
       }
     }
   },
@@ -51,7 +54,7 @@
     {
       "code": "bow_aiming_difficulty",
       "type": "float",
-      "ingui": "combatoverhaul:setting-bow_aiming_difficulty",
+      "ingui": "bullseyecontinued:setting-bow_aiming_difficulty",
       "default": 1.0,
       "range": {
         "min": 0.0,
@@ -61,13 +64,13 @@
     {
       "code": "bow_two_handed",
       "type": "boolean",
-      "ingui": "combatoverhaul:setting-bow_two_handed",
+      "ingui": "bullseyecontinued:setting-bow_two_handed",
       "default": true
     },
     {
       "code": "bows_aiming_cursor_type",
       "type": "string",
-      "ingui": "combatoverhaul:setting-bows_aiming_cursor_type",
+      "ingui": "bullseyecontinued:setting-bows_aiming_cursor_type",
       "clientSide": true,
       "default": "Moving",
       "values": [
@@ -80,7 +83,7 @@
     {
       "code": "bow_aiming_vertical_limit",
       "type": "float",
-      "ingui": "combatoverhaul:setting-bow_aiming_vertical_limit",
+      "ingui": "bullseyecontinued:setting-bow_aiming_vertical_limit",
       "clientSide": true,
       "default": 1.0,
       "range": {
@@ -91,7 +94,7 @@
     {
       "code": "bow_aiming_horisontal_limit",
       "type": "float",
-      "ingui": "combatoverhaul:setting-bow_aiming_horisontal_limit",
+      "ingui": "bullseyecontinued:setting-bow_aiming_horisontal_limit",
       "clientSide": true,
       "default": 1.0,
       "range": {
@@ -102,7 +105,7 @@
     {
       "code": "spears_aiming_cursor_type",
       "type": "Fixed",
-      "ingui": "combatoverhaul:setting-spears_aiming_cursor_type",
+      "ingui": "bullseyecontinued:setting-spears_aiming_cursor_type",
       "default": "Fixed",
       "values": [
         "None",
@@ -112,9 +115,15 @@
       ]
     },
     {
+      "code": "spears_enabled",
+      "type": "boolean",
+      "ingui": "bullseyecontinued:setting-spears_enabled",
+      "default": true
+    },
+    {
       "code": "spears_aiming_difficulty",
       "type": "float",
-      "ingui": "combatoverhaul:setting-spears_aiming_difficulty",
+      "ingui": "bullseyecontinued:setting-spears_aiming_difficulty",
       "default": 1.0,
       "range": {
         "min": 0.0,
@@ -124,7 +133,7 @@
     {
       "code": "spears_thrown_distance",
       "type": "float",
-      "ingui": "combatoverhaul:setting-spears_thrown_distance",
+      "ingui": "bullseyecontinued:setting-spears_thrown_distance",
       "default": 1.0,
       "range": {
         "min": 0.5,
@@ -134,7 +143,7 @@
     {
       "code": "bows_damage_multiplier",
       "type": "float",
-      "ingui": "combatoverhaul:setting-bows_damage_multiplier",
+      "ingui": "bullseyecontinued:setting-bows_damage_multiplier",
       "default": 1.0,
       "logarithmic": true,
       "range": {
@@ -145,7 +154,7 @@
     {
       "code": "spears_range_damage_multiplier",
       "type": "float",
-      "ingui": "combatoverhaul:setting-spears_range_damage_multiplier",
+      "ingui": "bullseyecontinued:setting-spears_range_damage_multiplier",
       "default": 1.0,
       "logarithmic": true,
       "range": {
@@ -156,7 +165,7 @@
     {
       "code": "arrow_ping_sound_on_hit",
       "type": "boolean",
-      "ingui": "combatoverhaul:setting-arrow_ping_sound_on_hit",
+      "ingui": "bullseyecontinued:setting-arrow_ping_sound_on_hit",
       "default": true
     }
   ]

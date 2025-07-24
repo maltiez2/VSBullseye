@@ -240,37 +240,37 @@ public class SpearClient : IClientWeaponLogic, IHasDynamicIdleAnimations, IOnGam
     {
         if (Stats.OneHandedStance?.Attack != null && Stats.OneHandedStance.Attack.DamageTypes.Length > 0)
         {
-            string description = GetAttackStatsDescription(Stats.OneHandedStance.Attack.DamageTypes.Select(element => element.Damage), "combatoverhaul:iteminfo-melee-weapon-onehanded");
+            string description = GetAttackStatsDescription(Stats.OneHandedStance.Attack.DamageTypes.Select(element => element.Damage), "bullseyecontinued:iteminfo-melee-weapon-onehanded");
             dsc.AppendLine(description);
         }
         else if (Stats.OneHandedStance?.DirectionalAttacks != null && Stats.OneHandedStance.DirectionalAttacks.Count > 0)
         {
             IEnumerable<DamageDataJson> damageTypes = Stats.OneHandedStance.DirectionalAttacks.Values.SelectMany(element => element.DamageTypes).Select(element => element.Damage);
-            string description = GetAttackStatsDescription(damageTypes, "combatoverhaul:iteminfo-melee-weapon-onehanded");
+            string description = GetAttackStatsDescription(damageTypes, "bullseyecontinued:iteminfo-melee-weapon-onehanded");
             dsc.AppendLine(description);
         }
 
         if (Stats.TwoHandedStance?.Attack != null && Stats.TwoHandedStance.Attack.DamageTypes.Length > 0)
         {
-            string description = GetAttackStatsDescription(Stats.TwoHandedStance.Attack.DamageTypes.Select(element => element.Damage), "combatoverhaul:iteminfo-melee-weapon-twohanded");
+            string description = GetAttackStatsDescription(Stats.TwoHandedStance.Attack.DamageTypes.Select(element => element.Damage), "bullseyecontinued:iteminfo-melee-weapon-twohanded");
             dsc.AppendLine(description);
         }
         else if (Stats.TwoHandedStance?.DirectionalAttacks != null && Stats.TwoHandedStance.DirectionalAttacks.Count > 0)
         {
             IEnumerable<DamageDataJson> damageTypes = Stats.TwoHandedStance.DirectionalAttacks.Values.SelectMany(element => element.DamageTypes).Select(element => element.Damage);
-            string description = GetAttackStatsDescription(damageTypes, "combatoverhaul:iteminfo-melee-weapon-twohanded");
+            string description = GetAttackStatsDescription(damageTypes, "bullseyecontinued:iteminfo-melee-weapon-twohanded");
             dsc.AppendLine(description);
         }
 
         if (Stats.OffHandStance?.Attack != null && Stats.OffHandStance.Attack.DamageTypes.Length > 0)
         {
-            string description = GetAttackStatsDescription(Stats.OffHandStance.Attack.DamageTypes.Select(element => element.Damage), "combatoverhaul:iteminfo-melee-weapon-offhanded");
+            string description = GetAttackStatsDescription(Stats.OffHandStance.Attack.DamageTypes.Select(element => element.Damage), "bullseyecontinued:iteminfo-melee-weapon-offhanded");
             dsc.AppendLine(description);
         }
         else if (Stats.OffHandStance?.DirectionalAttacks != null && Stats.OffHandStance.DirectionalAttacks.Count > 0)
         {
             IEnumerable<DamageDataJson> damageTypes = Stats.OffHandStance.DirectionalAttacks.Values.SelectMany(element => element.DamageTypes).Select(element => element.Damage);
-            string description = GetAttackStatsDescription(damageTypes, "combatoverhaul:iteminfo-melee-weapon-offhanded");
+            string description = GetAttackStatsDescription(damageTypes, "bullseyecontinued:iteminfo-melee-weapon-offhanded");
             dsc.AppendLine(description);
         }
 
@@ -283,11 +283,11 @@ public class SpearClient : IClientWeaponLogic, IHasDynamicIdleAnimations, IOnGam
                 blockTier = Math.Max(blockTier, tier);
             }
 
-            string bodyParts = Stats.OneHandedStance.Block.Zones.Length == 12 ? Lang.Get("combatoverhaul:detailed-damage-zone-All") : Stats.OneHandedStance.Block.Zones
-                .Select(zone => Lang.Get($"combatoverhaul:detailed-damage-zone-{zone}"))
+            string bodyParts = Stats.OneHandedStance.Block.Zones.Length == 12 ? Lang.Get("bullseyecontinued:detailed-damage-zone-All") : Stats.OneHandedStance.Block.Zones
+                .Select(zone => Lang.Get($"bullseyecontinued:detailed-damage-zone-{zone}"))
                 .Aggregate((first, second) => $"{first}, {second}");
 
-            dsc.AppendLine(Lang.Get("combatoverhaul:iteminfo-melee-weapon-blockStats", $"{blockTier:F0}", bodyParts, Lang.Get("combatoverhaul:iteminfo-melee-weapon-onehanded-block")));
+            dsc.AppendLine(Lang.Get("bullseyecontinued:iteminfo-melee-weapon-blockStats", $"{blockTier:F0}", bodyParts, Lang.Get("bullseyecontinued:iteminfo-melee-weapon-onehanded-block")));
         }
 
         if (Stats.OneHandedStance?.Parry?.BlockTier != null)
@@ -299,11 +299,11 @@ public class SpearClient : IClientWeaponLogic, IHasDynamicIdleAnimations, IOnGam
                 blockTier = Math.Max(blockTier, tier);
             }
 
-            string bodyParts = Stats.OneHandedStance.Parry.Zones.Length == 12 ? Lang.Get("combatoverhaul:detailed-damage-zone-All") : Stats.OneHandedStance.Parry.Zones
-                .Select(zone => Lang.Get($"combatoverhaul:detailed-damage-zone-{zone}"))
+            string bodyParts = Stats.OneHandedStance.Parry.Zones.Length == 12 ? Lang.Get("bullseyecontinued:detailed-damage-zone-All") : Stats.OneHandedStance.Parry.Zones
+                .Select(zone => Lang.Get($"bullseyecontinued:detailed-damage-zone-{zone}"))
                 .Aggregate((first, second) => $"{first}, {second}");
 
-            dsc.AppendLine(Lang.Get("combatoverhaul:iteminfo-melee-weapon-parryStats", $"{blockTier:F0}", bodyParts, Lang.Get("combatoverhaul:iteminfo-melee-weapon-onehanded-block")));
+            dsc.AppendLine(Lang.Get("bullseyecontinued:iteminfo-melee-weapon-parryStats", $"{blockTier:F0}", bodyParts, Lang.Get("bullseyecontinued:iteminfo-melee-weapon-onehanded-block")));
         }
 
         if (Stats.TwoHandedStance?.Block?.BlockTier != null)
@@ -315,11 +315,11 @@ public class SpearClient : IClientWeaponLogic, IHasDynamicIdleAnimations, IOnGam
                 blockTier = Math.Max(blockTier, tier);
             }
 
-            string bodyParts = Stats.TwoHandedStance.Block.Zones.Length == 12 ? Lang.Get("combatoverhaul:detailed-damage-zone-All") : Stats.TwoHandedStance.Block.Zones
-                .Select(zone => Lang.Get($"combatoverhaul:detailed-damage-zone-{zone}"))
+            string bodyParts = Stats.TwoHandedStance.Block.Zones.Length == 12 ? Lang.Get("bullseyecontinued:detailed-damage-zone-All") : Stats.TwoHandedStance.Block.Zones
+                .Select(zone => Lang.Get($"bullseyecontinued:detailed-damage-zone-{zone}"))
                 .Aggregate((first, second) => $"{first}, {second}");
 
-            dsc.AppendLine(Lang.Get("combatoverhaul:iteminfo-melee-weapon-blockStats", $"{blockTier:F0}", bodyParts, Lang.Get("combatoverhaul:iteminfo-melee-weapon-twohanded-block")));
+            dsc.AppendLine(Lang.Get("bullseyecontinued:iteminfo-melee-weapon-blockStats", $"{blockTier:F0}", bodyParts, Lang.Get("bullseyecontinued:iteminfo-melee-weapon-twohanded-block")));
         }
 
         if (Stats.TwoHandedStance?.Parry?.BlockTier != null)
@@ -331,11 +331,11 @@ public class SpearClient : IClientWeaponLogic, IHasDynamicIdleAnimations, IOnGam
                 blockTier = Math.Max(blockTier, tier);
             }
 
-            string bodyParts = Stats.TwoHandedStance.Parry.Zones.Length == 12 ? Lang.Get("combatoverhaul:detailed-damage-zone-All") : Stats.TwoHandedStance.Parry.Zones
-                .Select(zone => Lang.Get($"combatoverhaul:detailed-damage-zone-{zone}"))
+            string bodyParts = Stats.TwoHandedStance.Parry.Zones.Length == 12 ? Lang.Get("bullseyecontinued:detailed-damage-zone-All") : Stats.TwoHandedStance.Parry.Zones
+                .Select(zone => Lang.Get($"bullseyecontinued:detailed-damage-zone-{zone}"))
                 .Aggregate((first, second) => $"{first}, {second}");
 
-            dsc.AppendLine(Lang.Get("combatoverhaul:iteminfo-melee-weapon-parryStats", $"{blockTier:F0}", bodyParts, Lang.Get("combatoverhaul:iteminfo-melee-weapon-twohanded-block")));
+            dsc.AppendLine(Lang.Get("bullseyecontinued:iteminfo-melee-weapon-parryStats", $"{blockTier:F0}", bodyParts, Lang.Get("bullseyecontinued:iteminfo-melee-weapon-twohanded-block")));
         }
 
         if (Stats.OffHandStance?.Block?.BlockTier != null)
@@ -347,11 +347,11 @@ public class SpearClient : IClientWeaponLogic, IHasDynamicIdleAnimations, IOnGam
                 blockTier = Math.Max(blockTier, tier);
             }
 
-            string bodyParts = Stats.OffHandStance.Block.Zones.Length == 12 ? Lang.Get("combatoverhaul:detailed-damage-zone-All") : Stats.OffHandStance.Block.Zones
-                .Select(zone => Lang.Get($"combatoverhaul:detailed-damage-zone-{zone}"))
+            string bodyParts = Stats.OffHandStance.Block.Zones.Length == 12 ? Lang.Get("bullseyecontinued:detailed-damage-zone-All") : Stats.OffHandStance.Block.Zones
+                .Select(zone => Lang.Get($"bullseyecontinued:detailed-damage-zone-{zone}"))
                 .Aggregate((first, second) => $"{first}, {second}");
 
-            dsc.AppendLine(Lang.Get("combatoverhaul:iteminfo-melee-weapon-blockStats", $"{blockTier:F0}", bodyParts, Lang.Get("combatoverhaul:iteminfo-melee-weapon-offhanded-block")));
+            dsc.AppendLine(Lang.Get("bullseyecontinued:iteminfo-melee-weapon-blockStats", $"{blockTier:F0}", bodyParts, Lang.Get("bullseyecontinued:iteminfo-melee-weapon-offhanded-block")));
         }
 
         if (Stats.OffHandStance?.Parry?.BlockTier != null)
@@ -363,11 +363,11 @@ public class SpearClient : IClientWeaponLogic, IHasDynamicIdleAnimations, IOnGam
                 blockTier = Math.Max(blockTier, tier);
             }
 
-            string bodyParts = Stats.OffHandStance.Parry.Zones.Length == 12 ? Lang.Get("combatoverhaul:detailed-damage-zone-All") : Stats.OffHandStance.Parry.Zones
-                .Select(zone => Lang.Get($"combatoverhaul:detailed-damage-zone-{zone}"))
+            string bodyParts = Stats.OffHandStance.Parry.Zones.Length == 12 ? Lang.Get("bullseyecontinued:detailed-damage-zone-All") : Stats.OffHandStance.Parry.Zones
+                .Select(zone => Lang.Get($"bullseyecontinued:detailed-damage-zone-{zone}"))
                 .Aggregate((first, second) => $"{first}, {second}");
 
-            dsc.AppendLine(Lang.Get("combatoverhaul:iteminfo-melee-weapon-parryStats", $"{blockTier:F0}", bodyParts, Lang.Get("combatoverhaul:iteminfo-melee-weapon-offhanded-block")));
+            dsc.AppendLine(Lang.Get("bullseyecontinued:iteminfo-melee-weapon-parryStats", $"{blockTier:F0}", bodyParts, Lang.Get("bullseyecontinued:iteminfo-melee-weapon-offhanded-block")));
         }
     }
     public bool RestrictRightHandAction() => !CheckState(false, MeleeWeaponState.Idle, MeleeWeaponState.Aiming, MeleeWeaponState.StartingAim);
@@ -1120,7 +1120,7 @@ public class SpearClient : IClientWeaponLogic, IHasDynamicIdleAnimations, IOnGam
             damageTypes.Add(attack.DamageType);
         }
 
-        string damageType = damageTypes.Select(element => Lang.Get($"combatoverhaul:damage-type-{element}")).Aggregate((first, second) => $"{first}, {second}");
+        string damageType = damageTypes.Select(element => Lang.Get($"bullseyecontinued:damage-type-{element}")).Aggregate((first, second) => $"{first}, {second}");
 
         return Lang.Get(descriptionLangCode, damage, tier, damageType);
     }
@@ -1155,7 +1155,7 @@ public class SpearItem : ItemSpear, IHasWeaponLogic, IHasRangedWeaponLogic
                 ChangeGripInteraction = new()
                 {
                     MouseButton = EnumMouseButton.Wheel,
-                    ActionLangCode = "combatoverhaul:interaction-grip-change"
+                    ActionLangCode = "bullseyecontinued:interaction-grip-change"
                 };
             }
 
@@ -1170,7 +1170,7 @@ public class SpearItem : ItemSpear, IHasWeaponLogic, IHasRangedWeaponLogic
         {
             MouseButton = EnumMouseButton.None,
             HotKeyCode = "Alt",
-            ActionLangCode = "combatoverhaul:interaction-hold-alt"
+            ActionLangCode = "bullseyecontinued:interaction-hold-alt"
         };
     }
 
