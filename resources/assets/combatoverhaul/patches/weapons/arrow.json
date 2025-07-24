@@ -1,0 +1,14 @@
+﻿[
+  {
+    "file": "game:itemtypes/tool/arrow",
+    "op": "add",
+    "path": "/skipVariants",
+    "value": ["*-crude", "*-flint", "*-copper", "*-tinbronze", "*-bismuthbronze", "*-blackbronze", "*-gold", "*-silver", "*-iron", "*-meteoriciron", "*-steel", "*-erel", "*-bone"]
+  },
+  {
+    "file": "game:itemtypes/tool/arrow",
+    "op": "replace",
+    "path": "/creativeinventory",
+    "value": {}
+  }
+]

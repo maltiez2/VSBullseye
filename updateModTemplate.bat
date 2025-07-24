@@ -1,1 +1,0 @@
-git --git-dir=.git-modtemplate --work-tree=. pull
