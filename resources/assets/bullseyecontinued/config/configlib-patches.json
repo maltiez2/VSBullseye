@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "patches": {
     "string": {
       "game:itemtypes/bullseyecontinued/spear.json": {
@@ -9,7 +9,7 @@
       "game:itemtypes/bullseyecontinued/arrow.json": {
         "behaviors/0/properties/stats/HitSound": "(arrow_ping_sound_on_hit) ? value : empty_string"
       },
-      "bullseyecontinued:config/settings.json": {
+      "combatoverhaul:config/settings.json": {
         "BowsAimingCursorType": "bows_aiming_cursor_type"
       }
     },
@@ -28,7 +28,7 @@
         "1/value/Aiming/AimDifficulty": "spears_aiming_difficulty",
         "3/value/properties/stats/DamageStatsByType/@@*/Damage": "value * spears_range_damage_multiplier"
       },
-      "bullseyecontinued:config/settings.json": {
+      "combatoverhaul:config/settings.json": {
         "BowsAimingHorizontalLimit": "value * bow_aiming_horisontal_limit",
         "BowsAimingVerticalLimit": "value * bow_aiming_vertical_limit"
       },
@@ -54,6 +54,10 @@
     "vanilla_item": "Item"
   },
   "settings": [
+    {
+      "type": "separator",
+      "title": "bullseyecontinued:setting-separator-bows"
+    },
     {
       "code": "bow_aiming_difficulty",
       "type": "float",
@@ -106,16 +110,25 @@
       }
     },
     {
-      "code": "spears_aiming_cursor_type",
-      "type": "Fixed",
-      "ingui": "bullseyecontinued:setting-spears_aiming_cursor_type",
-      "default": "Fixed",
-      "values": [
-        "None",
-        "Vanilla",
-        "Fixed",
-        "Moving"
-      ]
+      "code": "bows_damage_multiplier",
+      "type": "float",
+      "ingui": "bullseyecontinued:setting-bows_damage_multiplier",
+      "default": 1.0,
+      "logarithmic": true,
+      "range": {
+        "min": 0.2,
+        "max": 5.0
+      }
+    },
+    {
+      "code": "arrow_ping_sound_on_hit",
+      "type": "boolean",
+      "ingui": "bullseyecontinued:setting-arrow_ping_sound_on_hit",
+      "default": true
+    },
+    {
+      "type": "separator",
+      "title": "bullseyecontinued:setting-separator-spears"
     },
     {
       "code": "spear_types_enabled",
@@ -128,6 +141,18 @@
       "type": "boolean",
       "ingui": "bullseyecontinued:setting-spears_enabled",
       "default": false
+    },
+    {
+      "code": "spears_aiming_cursor_type",
+      "type": "Fixed",
+      "ingui": "bullseyecontinued:setting-spears_aiming_cursor_type",
+      "default": "Fixed",
+      "values": [
+        "None",
+        "Vanilla",
+        "Fixed",
+        "Moving"
+      ]
     },
     {
       "code": "spears_aiming_difficulty",
@@ -150,17 +175,6 @@
       }
     },
     {
-      "code": "bows_damage_multiplier",
-      "type": "float",
-      "ingui": "bullseyecontinued:setting-bows_damage_multiplier",
-      "default": 1.0,
-      "logarithmic": true,
-      "range": {
-        "min": 0.2,
-        "max": 5.0
-      }
-    },
-    {
       "code": "spears_range_damage_multiplier",
       "type": "float",
       "ingui": "bullseyecontinued:setting-spears_range_damage_multiplier",
@@ -170,12 +184,6 @@
         "min": 0.2,
         "max": 5.0
       }
-    },
-    {
-      "code": "arrow_ping_sound_on_hit",
-      "type": "boolean",
-      "ingui": "bullseyecontinued:setting-arrow_ping_sound_on_hit",
-      "default": true
     }
   ]
 }

@@ -169,6 +169,9 @@
   "interaction-toggle-light-source": "Toggle wearable light source",
   "interaction-toggle-light-source-hotkey": "Toggle wearable light source",
 
+  "setting-separator-bows": "Bows",
+  "setting-separator-spears": "Spears",
+
   "setting-directions_cursor_transparency": "Directions selection cursor transparency",
   "setting-directions_cursor_scale": "Directions selection cursor scale",
   "setting-directions_inertia": "Directions cursor inertia",
