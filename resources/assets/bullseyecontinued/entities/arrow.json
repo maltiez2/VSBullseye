@@ -7,7 +7,8 @@
       "states": ["crude", "flint", "obsidian", "copper", "tinbronze", "bismuthbronze", "blackbronze", "iron", "gold", "silver", "steel", "meteoriciron", "erel", "bone"]
     }
   ],
-  "hitboxSize": {"x": 0.125, "y": 0.125},
+  "SelectionBoxSize": {"x": 0.15, "y": 0.15},
+  "CollisionBoxSize": {"x": 0.02, "y": 0.02},
   "client": {
     "size": 0.55,
     "renderer": "Shape",
@@ -32,8 +33,10 @@
       "*-obsidian": {"material": {"base": "game:block/stone/rock/obsidian1"}},
       "*": {"material": {"base": "game:block/metal/ingot/{material}"}}
     },
-    "behaviors": [{"code": "passivephysics", "groundDragFactor": 1, "airDragFactor": 0.25, "gravityFactor": 0.5}, {"code": "interpolateposition"}]
+    "behaviors": [{"code": "CombatOverhaul:ProjectilePhysics", "groundDragFactor": 1, "airDragFactor": 0.25, "gravityFactor": 0.5}, {"code": "interpolateposition"}]
   },
-  "server": {"behaviors": [{"code": "passivephysics", "groundDragFactor": 1, "airDragFactor": 0.25, "gravityFactor": 0.5}, {"code": "despawn", "minSeconds": 600}]},
+  "server": {
+    "behaviors": [{"code": "CombatOverhaul:ProjectilePhysics", "groundDragFactor": 1, "airDragFactor": 0.25, "gravityFactor": 0.5}, {"code": "despawn", "minSeconds": 600}]
+  },
   "sounds": {}
 }

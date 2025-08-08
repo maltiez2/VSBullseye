@@ -3,7 +3,6 @@ using CombatOverhaul.Animations;
 using CombatOverhaul.DamageSystems;
 using CombatOverhaul.Implementations;
 using CombatOverhaul.Inputs;
-using CombatOverhaul.Integration;
 using CombatOverhaul.MeleeSystems;
 using CombatOverhaul.RangedSystems;
 using CombatOverhaul.RangedSystems.Aiming;
@@ -595,7 +594,7 @@ public class SpearClient : IClientWeaponLogic, IHasDynamicIdleAnimations, IOnGam
     //[ActionEventHandler(EnumEntityAction.RightMouseDown, ActionState.Active)]
     protected virtual bool Block(ItemSlot slot, EntityPlayer player, ref int state, ActionEventData eventData, bool mainHand, AttackDirection direction)
     {
-        bool handleEvent = !Settings.DoVanillaActionsWhileBlocking;
+        bool handleEvent = !Settings.VanillaActionsWhileBlocking;
 
         if (eventData.AltPressed) return false;
         if (!CanBlock(mainHand) && !CanParry(mainHand)) return false;
@@ -1205,7 +1204,7 @@ public class SpearItem : ItemSpear, IHasWeaponLogic, IHasRangedWeaponLogic
     public override void OnHeldInteractStart(ItemSlot itemslot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, bool firstEvent, ref EnumHandHandling handling)
     {
         base.OnHeldInteractStart(itemslot, byEntity, blockSel, entitySel, firstEvent, ref handling);
-        
+
         handling = EnumHandHandling.Handled;
     }
     public override bool OnHeldInteractStep(float secondsUsed, ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel)

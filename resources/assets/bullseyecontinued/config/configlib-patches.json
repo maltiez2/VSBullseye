@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "patches": {
     "string": {
       "game:itemtypes/bullseyecontinued/spear.json": {
@@ -42,6 +42,9 @@
       },
       "bullseyecontinued:patches/weapons/spear.json": {
         "-/enabled": "spears_enabled"
+      },
+      "bullseyecontinued:patches/weapons/spear-types.json": {
+        "-/enabled": "spear_types_enabled"
       }
     }
   },
@@ -115,10 +118,16 @@
       ]
     },
     {
+      "code": "spear_types_enabled",
+      "type": "boolean",
+      "ingui": "bullseyecontinued:setting-spear_types_enabled",
+      "default": true
+    },
+    {
       "code": "spears_enabled",
       "type": "boolean",
       "ingui": "bullseyecontinued:setting-spears_enabled",
-      "default": true
+      "default": false
     },
     {
       "code": "spears_aiming_difficulty",
