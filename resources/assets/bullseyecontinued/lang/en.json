@@ -214,5 +214,9 @@
   "setting-player_model_face_damage": "Player face damage multiplier",
   "setting-player_model_arms_damage": "Player arms damage multiplier",
   "setting-player_model_legs_damage": "Player legs damage multiplier",
-  "setting-modify_vanilla_classes-comment": "Works only in singleplayer"
+  "setting-modify_vanilla_classes-comment": "Works only in singleplayer",
+
+  "setting-comment-bows_aiming_cursor_type": "Does not require world reload to apply",
+  "setting-comment-bow_aiming_vertical_limit": "Does not require world reload to apply",
+  "setting-comment-bow_aiming_horisontal_limit": "Does not require world reload to apply"
 }

@@ -8,9 +8,6 @@
       },
       "game:itemtypes/bullseyecontinued/arrow.json": {
         "behaviors/0/properties/stats/HitSound": "(arrow_ping_sound_on_hit) ? value : empty_string"
-      },
-      "combatoverhaul:config/settings.json": {
-        "BowsAimingCursorType": "bows_aiming_cursor_type"
       }
     },
     "number": {
@@ -27,10 +24,6 @@
       "bullseyecontinued:patches/weapons/spear.json": {
         "1/value/Aiming/AimDifficulty": "spears_aiming_difficulty",
         "3/value/properties/stats/DamageStatsByType/@@*/Damage": "value * spears_range_damage_multiplier"
-      },
-      "combatoverhaul:config/settings.json": {
-        "BowsAimingHorizontalLimit": "value * bow_aiming_horisontal_limit",
-        "BowsAimingVerticalLimit": "value * bow_aiming_vertical_limit"
       },
       "bullseyecontinued:patches/tools/pickaxe.json": {
         "0/value/AnimationSpeedBonusFromMiningSpeed": "tool_animation_speed_bonus"
@@ -78,6 +71,7 @@
       "code": "bows_aiming_cursor_type",
       "type": "string",
       "ingui": "bullseyecontinued:setting-bows_aiming_cursor_type",
+      "comment": "bullseyecontinued:setting-comment-bows_aiming_cursor_type",
       "clientSide": true,
       "default": "Moving",
       "values": [
@@ -91,6 +85,7 @@
       "code": "bow_aiming_vertical_limit",
       "type": "float",
       "ingui": "bullseyecontinued:setting-bow_aiming_vertical_limit",
+      "comment": "bullseyecontinued:setting-comment-bow_aiming_vertical_limit",
       "clientSide": true,
       "default": 1.0,
       "range": {
@@ -102,6 +97,7 @@
       "code": "bow_aiming_horisontal_limit",
       "type": "float",
       "ingui": "bullseyecontinued:setting-bow_aiming_horisontal_limit",
+      "comment": "bullseyecontinued:setting-comment-bow_aiming_horisontal_limit",
       "clientSide": true,
       "default": 1.0,
       "range": {
