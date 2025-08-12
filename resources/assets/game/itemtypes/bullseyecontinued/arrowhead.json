@@ -4,7 +4,7 @@
   "shapeByType": {"*": {"base": "item/tool/arrowhead-stone"}},
   "texturesByType": {"*-obsidian": {"material": {"base": "block/stone/rock/{material}1"}}},
   "attributes": {"displaycaseable": true, "shelvable": true, "onTongTransform": {"translation": {"x": -0.72, "y": -0.7, "z": -0.6}, "rotation": {"x": 28, "y": 180, "z": -7}}},
-  "creativeinventory": {"general": ["*"], "items": ["*"]},
+  "creativeinventory": {"general": ["*"], "items": ["*"], "bullseyecontinued": ["*"]},
   "heldTpUseAnimation": "interactstatic",
   "maxstacksize": 64,
   "guiTransformByType": {

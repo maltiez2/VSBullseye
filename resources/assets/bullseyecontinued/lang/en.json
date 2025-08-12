@@ -1,5 +1,5 @@
 {
-  "game:tabname-bullseyecontinued": "Combat Overhaul",
+  "game:tabname-bullseyecontinued": "Bullseye",
 
   "message-mainhand-empty": "Main hand should be empty",
   "message-offhand-empty":  "Offhand should be empty",
@@ -136,7 +136,6 @@
   "damagelog-dealt-damage-with-projectile": "Player's {3} hit {0} of {1} dealing {2} damage",
   "damagelog-second-chance": "Player used second chance to survive fatal damage",
   "damagelog-second-chance-cooldown": "Player received fatal damage, but second chance was on cooldown ({0} seconds left)",
-  
 
   "item-creature-arrow-*": "arrow",
   "item-creature-spear-*": "spear",
@@ -160,6 +159,17 @@
   "game:item-spearhead-steel": "Steel spear head",
   "game:item-arrow-obsidian": "Obsidian arrow",
   "game:item-arrowhead-obsidian": "Obsidian arrow head",
+  "item-slingbullet-lead": "Lead sling bullet",
+  "item-slingbullet-obsidian": "Obsidian sling bullet",
+  "item-slingbullet-clay-*": "Raw clay sling bullet",
+  "item-slingbullet-redclay": "Clay sling bullet",
+  "item-slingbullet-blueclay": "Clay sling bullet",
+  "item-slingbullet-fireclay": "Clay sling bullet",
+  "item-slingbullet-*": "Stone sling bullet",
+  "item-slingpouch-waist-plain": "Sling pouch",
+
+  "block-ammomold-slingbullet-raw": "Raw sling bullets mold",
+  "block-ammomold-slingbullet-fired": "Sling bullets mold",
 
   "prefixandcreature-arrow-*": "Arrow",
   "prefixandcreature-spear-*": "Spear",

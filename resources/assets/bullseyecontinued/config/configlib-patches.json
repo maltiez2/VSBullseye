@@ -21,22 +21,19 @@
         "attributes/AimingByType/@@*/AimDifficulty": "bow_aiming_difficulty",
         "attributes/ArrowDamageMultiplierByType/@@*": "value * bows_damage_multiplier"
       },
-      "bullseyecontinued:patches/weapons/spear.json": {
+      "bullseyecontinued:patches/spear.json": {
         "1/value/Aiming/AimDifficulty": "spears_aiming_difficulty",
         "3/value/properties/stats/DamageStatsByType/@@*/Damage": "value * spears_range_damage_multiplier"
-      },
-      "bullseyecontinued:patches/tools/pickaxe.json": {
-        "0/value/AnimationSpeedBonusFromMiningSpeed": "tool_animation_speed_bonus"
       }
     },
     "boolean": {
       "game:itemtypes/bullseyecontinued/bow.json": {
         "attributes/TwoHanded": "bow_two_handed"
       },
-      "bullseyecontinued:patches/weapons/spear.json": {
+      "bullseyecontinued:patches/spear.json": {
         "-/enabled": "spears_enabled"
       },
-      "bullseyecontinued:patches/weapons/spear-types.json": {
+      "bullseyecontinued:patches/spear-types.json": {
         "-/enabled": "spear_types_enabled"
       }
     }

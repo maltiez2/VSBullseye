@@ -1,0 +1,13 @@
+[
+	{
+		"ingredientPattern": "R,B",
+		"requiresTrait": "improviser",
+		"ingredients": {
+			"R": { "type": "item", "code": "game:rope", "quantity": 2 },
+			"B": { "type": "item", "code": "bullseyecontinued:slingbullet-*", "isTool": true, "toolDurabilityCost": 0 }
+		},
+		"width": 1,
+		"height": 2,
+		"output": { "type": "item", "code": "game:sling", "quantity": 1  }
+	}
+]
