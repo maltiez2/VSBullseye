@@ -102,7 +102,7 @@ public class SpearClient : IClientWeaponLogic, IHasDynamicIdleAnimations, IOnGam
 
     public virtual DirectionsConfiguration DirectionsType { get; protected set; } = DirectionsConfiguration.None;
 
-    public AnimationRequestByCode? GetIdleAnimation(bool mainHand)
+    public AnimationRequestByCode? GetIdleAnimation(EntityPlayer player, ItemSlot slot, bool mainHand)
     {
         return GetStance<MeleeWeaponStance>(mainHand) switch
         {
@@ -112,7 +112,7 @@ public class SpearClient : IClientWeaponLogic, IHasDynamicIdleAnimations, IOnGam
             _ => null
         };
     }
-    public AnimationRequestByCode? GetReadyAnimation(bool mainHand)
+    public AnimationRequestByCode? GetReadyAnimation(EntityPlayer player, ItemSlot slot, bool mainHand)
     {
         return GetStance<MeleeWeaponStance>(mainHand) switch
         {
@@ -452,11 +452,11 @@ public class SpearClient : IClientWeaponLogic, IHasDynamicIdleAnimations, IOnGam
                     string? tpAttackAnimation = "";
                     if (DirectionsType == DirectionsConfiguration.None)
                     {
-                        stats.TpAttackAnimation.TryGetValue("Main", out tpAttackAnimation);
+                        //stats.TpAttackAnimation.TryGetValue("Main", out tpAttackAnimation);
                     }
                     else
                     {
-                        stats.TpAttackAnimation.TryGetValue(direction.ToString(), out tpAttackAnimation);
+                        //stats.TpAttackAnimation.TryGetValue(direction.ToString(), out tpAttackAnimation);
                     }
                     tpAttackAnimation ??= "";
 
@@ -625,7 +625,7 @@ public class SpearClient : IClientWeaponLogic, IHasDynamicIdleAnimations, IOnGam
                 stats.BlockAnimation,
                 animationSpeed: PlayerBehavior?.ManipulationSpeed ?? 1,
                 category: AnimationCategory(mainHand));
-            if (TpAnimationBehavior == null) AnimationBehavior?.PlayVanillaAnimation(stats.BlockTpAnimation, mainHand);
+            //if (TpAnimationBehavior == null) AnimationBehavior?.PlayVanillaAnimation(stats.BlockTpAnimation, mainHand);
 
             ParryButtonReleased = false;
         }
@@ -645,7 +645,7 @@ public class SpearClient : IClientWeaponLogic, IHasDynamicIdleAnimations, IOnGam
                 stats.BlockAnimation,
                 animationSpeed: GetAnimationSpeed(player, Stats.ProficiencyStat),
                 category: AnimationCategory(mainHand));
-            if (TpAnimationBehavior == null) AnimationBehavior?.PlayVanillaAnimation(stats.BlockTpAnimation, mainHand);
+            //if (TpAnimationBehavior == null) AnimationBehavior?.PlayVanillaAnimation(stats.BlockTpAnimation, mainHand);
         }
 
         SetSpeedPenalty(mainHand, player);
@@ -713,7 +713,7 @@ public class SpearClient : IClientWeaponLogic, IHasDynamicIdleAnimations, IOnGam
         MeleeBlockSystem.StopBlock(mainHand);
         AnimationBehavior?.PlayReadyAnimation(mainHand);
         TpAnimationBehavior?.PlayReadyAnimation(mainHand);
-        AnimationBehavior?.StopVanillaAnimation(GetStanceStats(mainHand)?.BlockTpAnimation ?? "", mainHand);
+        //AnimationBehavior?.StopVanillaAnimation(GetStanceStats(mainHand)?.BlockTpAnimation ?? "", mainHand);
         SetState(MeleeWeaponState.Idle, mainHand);
 
         float cooldown = GetStanceStats(mainHand)?.BlockCooldownMs ?? 0;
@@ -1126,7 +1126,7 @@ public class SpearClient : IClientWeaponLogic, IHasDynamicIdleAnimations, IOnGam
 }
 
 
-public class SpearItem : ItemSpear, IHasWeaponLogic, IHasRangedWeaponLogic
+public class SpearItem : ItemSpear, IHasWeaponLogic, IHasRangedWeaponLogic, IHasDynamicIdleAnimations
 {
     public SpearClient? ClientLogic { get; private set; }
     public MeleeWeaponServer? ServerLogic { get; private set; }
@@ -1173,8 +1173,8 @@ public class SpearItem : ItemSpear, IHasWeaponLogic, IHasRangedWeaponLogic
         };
     }
 
-    public AnimationRequestByCode? GetIdleAnimation(bool mainHand) => null; //ClientLogic?.GetIdleAnimation(mainHand);
-    public AnimationRequestByCode? GetReadyAnimation(bool mainHand) => null; //ClientLogic?.GetReadyAnimation(mainHand);
+    public AnimationRequestByCode? GetIdleAnimation(EntityPlayer player, ItemSlot slot, bool mainHand) => null; //ClientLogic?.GetIdleAnimation(mainHand);
+    public AnimationRequestByCode? GetReadyAnimation(EntityPlayer player, ItemSlot slot, bool mainHand) => null; //ClientLogic?.GetReadyAnimation(mainHand);
 
     public override void OnHeldRenderOpaque(ItemSlot inSlot, IClientPlayer byPlayer)
     {

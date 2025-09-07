@@ -56,7 +56,7 @@
       "CursorTextureNotReady": "combatoverhaul:gui/aiming/throw-part.png",
       "AllowSprint": true,
       "MoveSpeedPenalty": 0.2,
-      "AimDrift": 20,
+      "AimDrift": 40,
       "AimTwitch": 0,
       "AnimationFollowX": 7.5,
       "AnimationFollowY": 7,

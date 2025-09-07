@@ -181,6 +181,7 @@
 
   "setting-separator-bows": "Bows",
   "setting-separator-spears": "Spears",
+  "setting-separator-slings": "Slings",
 
   "setting-directions_cursor_transparency": "Directions selection cursor transparency",
   "setting-directions_cursor_scale": "Directions selection cursor scale",
@@ -209,7 +210,7 @@
   "setting-tool_rendering_offset": "Tools clipping through blocks",
   "setting-weapon_rendering_offset": "Weapons clipping through blocks and entities",
   "setting-axe_can_split_logs": "Axe can split logs (turn off for compatibility with other mods if necessary)",
-  "setting-arrow_ping_sound_on_hit": "Ping sound on arrow or thrown spear hit",
+  "setting-arrow_ping_sound_on_hit": "Ping sound on arrow or sling bullet hit",
   "setting-tool_whoosh_sound": "Tools whoosh sound volume on swing",
   "setting-tool_animation_speed_bonus": "Animation speed bonus for pickaxes",
   "setting-comment-tool_animation_speed_bonus": "Animation speed bonus from mining speed bonus of a pickaxe. Makes higher tier pickaxes swing faster. Value of 0.3 means +30% animation speed for steel piackaxe.",
@@ -225,8 +226,13 @@
   "setting-player_model_arms_damage": "Player arms damage multiplier",
   "setting-player_model_legs_damage": "Player legs damage multiplier",
   "setting-modify_vanilla_classes-comment": "Works only in singleplayer",
+  "setting-slings_aiming_cursor_type": "Slings aiming cursor type",
+  "setting-slings_damage_multiplier": "Slings damage multiplier",
+  "setting-slings_aiming_difficulty": "Slings aiming difficulty",
+  "setting-slings_dispersion_multiplier": "Sling dispersion multiplier",
 
   "setting-comment-bows_aiming_cursor_type": "Does not require world reload to apply",
   "setting-comment-bow_aiming_vertical_limit": "Does not require world reload to apply",
-  "setting-comment-bow_aiming_horisontal_limit": "Does not require world reload to apply"
+  "setting-comment-bow_aiming_horisontal_limit": "Does not require world reload to apply",
+  "setting-comment-slings_aiming_cursor_type": "Does not require world reload to apply"
 }

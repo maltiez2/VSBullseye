@@ -8,6 +8,9 @@
       },
       "game:itemtypes/bullseyecontinued/arrow.json": {
         "behaviors/0/properties/stats/HitSound": "(arrow_ping_sound_on_hit) ? value : empty_string"
+      },
+      "bullseyecontinued:itemtypes/sling-bullet.json": {
+        "behaviors/0/properties/stats/HitSound": "(arrow_ping_sound_on_hit) ? value : empty_string"
       }
     },
     "number": {
@@ -24,6 +27,12 @@
       "bullseyecontinued:patches/spear.json": {
         "1/value/Aiming/AimDifficulty": "spears_aiming_difficulty",
         "3/value/properties/stats/DamageStatsByType/@@*/Damage": "value * spears_range_damage_multiplier"
+      },
+      "game:itemtypes/bullseyecontinued/sling.json": {
+        "attributes/Aiming/AimDifficulty": "slings_aiming_difficulty",
+        "attributes/BulletDamageMultiplier": "value * slings_damage_multiplier",
+        "attributes/DispersionMOA/0": "value * slings_dispersion_multiplier",
+        "attributes/DispersionMOA/1": "value * slings_dispersion_multiplier"
       }
     },
     "boolean": {
@@ -118,6 +127,57 @@
       "type": "boolean",
       "ingui": "bullseyecontinued:setting-arrow_ping_sound_on_hit",
       "default": true
+    },
+    {
+      "type": "separator",
+      "title": "bullseyecontinued:setting-separator-slings"
+    },
+    {
+      "code": "slings_aiming_cursor_type",
+      "type": "string",
+      "ingui": "bullseyecontinued:setting-slings_aiming_cursor_type",
+      "comment": "bullseyecontinued:setting-comment-slings_aiming_cursor_type",
+      "clientSide": true,
+      "default": "Fixed",
+      "values": [
+        "None",
+        "Vanilla",
+        "Fixed",
+        "Moving"
+      ]
+    },
+    {
+      "code": "slings_damage_multiplier",
+      "type": "float",
+      "ingui": "bullseyecontinued:setting-slings_damage_multiplier",
+      "default": 1.0,
+      "logarithmic": true,
+      "range": {
+        "min": 0.2,
+        "max": 5.0
+      }
+    },
+    {
+      "code": "slings_aiming_difficulty",
+      "type": "float",
+      "ingui": "bullseyecontinued:setting-slings_aiming_difficulty",
+      "default": 1.0,
+      "logarithmic": true,
+      "range": {
+        "min": 0.0,
+        "max": 100.0
+      }
+    },
+    {
+      "code": "slings_dispersion_multiplier",
+      "type": "float",
+      "ingui": "bullseyecontinued:setting-slings_dispersion_multiplier",
+      "default": 1.0,
+      "logarithmic": true,
+      "range": {
+        "min": 0.2,
+        "max": 10.0
+      }
     },
     {
       "type": "separator",
